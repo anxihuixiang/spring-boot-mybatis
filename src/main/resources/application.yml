@@ -7,6 +7,9 @@ spring:
     multipart: #文件上传大小限制
       maxFileSize: 1024MB
       maxRequestSize: 10240MB
+  jackson: # Jackson配置
+    timeZone: GMT+8
+    dateFormat: yyyy-MM-dd HH:mm:ss
   thymeleaf:
     cache: false
   datasource: # 数据库配置
@@ -18,12 +21,8 @@ spring:
   h2: # 数据库管理
     console:
       enabled: true
-      path: /h2-console
       settings:
         webAllowOthers: true
-  jackson: # Jackson配置
-    timeZone: GMT+8
-    dateFormat: yyyy-MM-dd HH:mm:ss
 
 # MyBatis 配置
 mybatis:
