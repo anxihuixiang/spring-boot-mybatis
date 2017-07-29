@@ -9,7 +9,7 @@ Mybatis + 通用Mapper：数据库SQL访问框架，使代码与SQL分离，易�
 Spring Cache + EhCache：使用声明式缓存，对方法返回值进行缓存，使用EhCache作为本地缓存，后续扩展Redis做共享缓存。  
 Protostuff 序列化：Protostuff 序列化可以大幅提高时间及空间性能，适合传输对象，比如存储到Redis等。  
 Spring AOP：使用AOP对方法日志进行统一处理，也可用做收集信息、事务处理、权限校验等。  
-RSA 和 AES：RSA 非对称可逆加密可用于登陆加密等， AES 对称可逆加密可用于内部存储数据。
+RSA 和 AES：RSA 非对称可逆加密可用于登陆加密等， AES 对称可逆加密可用于内部存储数据。  
 H2 Database：Java应用嵌入式数据库，语法和MySql兼容性很好，适合小项目，切换为MySql非常容易。  
 Swagger2：扫描Controller及标记注解，生成接口文档，访问路径：/swagger-ui.html。  
 JWT：Json Web Token，使用JWT可以把认证信息存储到用户端，并对用户提交的认证信息进行验证。  
