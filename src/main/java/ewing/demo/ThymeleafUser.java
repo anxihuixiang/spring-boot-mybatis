@@ -1,4 +1,4 @@
-package ewing.controller;
+package ewing.demo;
 
 import ewing.common.pagination.PageParam;
 import ewing.entity.User;
