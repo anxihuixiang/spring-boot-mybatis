@@ -1,0 +1,30 @@
+# 服务配置
+server:
+  port: 80
+# Spring配置
+spring:
+  http:
+    multipart: #文件上传大小限制
+      maxFileSize: 1024MB
+      maxRequestSize: 10240MB
+  thymeleaf:
+    cache: false
+  datasource: # 数据库配置
+    schema: classpath:firstdata.sql
+    url: jdbc:h2:file:./resources/h2
+    driverClassName: org.h2.Driver
+    username: test
+    password: test
+  h2: # 数据库管理
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        webAllowOthers: true
+  jackson: # Jackson配置
+    timeZone: GMT+8
+    dateFormat: yyyy-MM-dd HH:mm:ss
+
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
