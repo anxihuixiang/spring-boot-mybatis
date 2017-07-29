@@ -5,7 +5,7 @@
 Spring Framework：Spring基础框架，提供Context、Task Schedule等功能支持。  
 Spring MVC：Web访问接口与控制器，默认页面，拦截器，全局异常，Json消息转换，自动转换时间，静态资源访问，动态国际化支持等。  
 Thymeleaf：页面视图的模板引擎，很适合作为Web应用的视图的业务逻辑层。  
-Mybatis + 通用Mapper：数据库SQL访问框架，使代码与SQL分离，易于维护。  
+Mybatis + 通用Mapper：数据库SQL访问框架，使代码与SQL分离，易于维护，通用Mapper可以很方便地对单表进行操作。  
 Spring Cache + EhCache：使用声明式缓存，对方法返回值进行缓存，使用EhCache作为本地缓存，后续扩展Redis做共享缓存。  
 Protostuff 序列化：Protostuff 序列化可以大幅提高时间及空间性能，适合传输对象，比如存储到Redis等。  
 Spring AOP：使用AOP对方法日志进行统一处理，也可用做收集信息、事务处理、权限校验等。  
