@@ -5,6 +5,13 @@
 <generatorConfiguration>
     <context id="ewing.mybatis" targetRuntime="MyBatis3">
 
+        <!-- 通用Mapper生成插件 -->
+        <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            &lt;!&ndash; 数据库表名区分大小 默认false &ndash;&gt;
+            <property name="caseSensitive" value="false"/>
+        </plugin>-->
+
         <!-- 屏蔽注释的生成 -->
         <commentGenerator>
             <property name="suppressAllComments" value="true"/>
