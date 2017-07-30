@@ -1,16 +1,8 @@
 package ewing.entity;
 
-import javax.persistence.Id;
 import java.util.Date;
 
-/**
- * 用户实体类。
- *
- * @author Ewing
- * @since 2017-04-21
- **/
 public class User {
-    @Id
     private String userId;
 
     private String name;
@@ -28,7 +20,7 @@ public class User {
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        this.userId = userId == null ? null : userId.trim();
     }
 
     public String getName() {
@@ -36,7 +28,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getPassword() {
@@ -44,7 +36,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password == null ? null : password.trim();
     }
 
     public Integer getGender() {
@@ -70,5 +62,4 @@ public class User {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
 }

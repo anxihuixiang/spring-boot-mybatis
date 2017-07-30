@@ -1,16 +1,30 @@
 package ewing.mapper;
 
 import ewing.entity.User;
-import tk.mybatis.mapper.common.Mapper;
+import ewing.entity.UserExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-/**
- * 用户数据库访问接口。
- *
- * @author Ewing
- * @since 2017-04-21
- **/
-public interface UserMapper extends Mapper<User> {
+public interface UserMapper {
+    long countByExample(UserExample example);
 
-    void deleteAll();
+    int deleteByExample(UserExample example);
 
+    int deleteByPrimaryKey(String userId);
+
+    int insert(User record);
+
+    int insertSelective(User record);
+
+    List<User> selectByExample(UserExample example);
+
+    User selectByPrimaryKey(String userId);
+
+    int updateByExampleSelective(@Param("record") User record, @Param("example") UserExample example);
+
+    int updateByExample(@Param("record") User record, @Param("example") UserExample example);
+
+    int updateByPrimaryKeySelective(User record);
+
+    int updateByPrimaryKey(User record);
 }
