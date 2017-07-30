@@ -49,6 +49,20 @@ public class Result<E> {
         return this;
     }
 
+    public Result<E> toSuccess(String message) {
+        this.code = 1;
+        this.success = true;
+        this.message = message;
+        return this;
+    }
+
+    public Result<E> toFailure(String message) {
+        this.code = 0;
+        this.success = false;
+        this.message = message;
+        return this;
+    }
+
     public int getCode() {
         return code;
     }
