@@ -5,10 +5,9 @@
 <generatorConfiguration>
     <context id="ewing.mybatis" targetRuntime="MyBatis3">
 
-        <!-- 通用Mapper生成插件 -->
+        <!-- 通用Mapper生成插件，caseSensitive为表名是否区分大小写 -->
         <!--<plugin type="tk.mybatis.mapper.generator.MapperPlugin">
             <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
-            &lt;!&ndash; 数据库表名区分大小 默认false &ndash;&gt;
             <property name="caseSensitive" value="false"/>
         </plugin>-->
 
@@ -44,7 +43,8 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!-- 配置需要生成的表 可用%表示通配 -->
+        <!-- 配置需要生成的表，可用%表示通配表名进行批量生成
+          enable*Example可配置是否生成模板方法（默认生成），开启通用Mapper可关闭 -->
         <table tableName="User"/>
 
     </context>
