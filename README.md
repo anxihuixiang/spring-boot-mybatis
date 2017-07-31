@@ -11,7 +11,7 @@ Protostuff 序列化：Protostuff 序列化可以大幅提高时间及空间性�
 Spring AOP：使用AOP对方法日志进行统一处理，也可用做收集信息、事务处理、权限校验等。  
 RSA 和 AES：RSA 非对称可逆加密可用于登陆加密等， AES 对称可逆加密可用于内部存储数据。  
 H2 Database：Java应用嵌入式数据库，语法和MySql兼容性很好，适合小项目。  
-使用 MySql：把 pom.xml 中的 h2 依赖和插件依赖改为 MySql 驱动，修改 pom.xml 以及 application.yml 中的数据库连接信息。  
+使用其他数据库：把 pom.xml 中的 h2 依赖和插件依赖改为其他数据库驱动，修改 pom.xml 以及 application.yml 中的数据库连接信息。  
 Swagger2：扫描Controller及标记注解，生成接口文档，访问路径：/swagger-ui.html。  
 JWT：Json Web Token，使用JWT可以把认证信息存储到用户端，并对用户提交的认证信息进行验证。  
 OkHttp3：OkHttp3比其他Http类具有更好的性能和更方便的API，项目中的OkHttpUtils类是对OkHttp3的简单封装。  
