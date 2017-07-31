@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
+
+    <!-- 相关依赖已在Maven插件配置中引入，此处不需要Jar包依赖 -->
+
     <context id="ewing.mybatis" targetRuntime="MyBatis3">
 
         <!-- 通用Mapper生成插件，caseSensitive为表名是否区分大小写 -->
