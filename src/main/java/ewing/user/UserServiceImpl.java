@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
             throw new AppException("密码不能为空！");
         user.setUserId(GlobalIdWorker.nextString());
         user.setCreateTime(new Date());
-        userMapper.insert(user);
+        userMapper.insertSelective(user);
         return user;
     }
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(key = "#user.userId")
     public void updateUser(User user) {
-        userMapper.updateByPrimaryKey(user);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
