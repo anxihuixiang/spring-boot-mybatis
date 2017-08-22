@@ -72,7 +72,8 @@ public class UserServiceImpl implements UserService {
         if (gender != null)
             criteria.andGenderEqualTo(gender);
 
-        Page<User> userPage = PageHelper.offsetPage(pageParam.getOffset(), pageParam.getLimit(), pageParam.isCount());
+        Page<User> userPage = PageHelper.offsetPage(pageParam.getOffset(),
+                pageParam.getLimit(), pageParam.isCount());
 
         userMapper.selectByExample(example);
 
