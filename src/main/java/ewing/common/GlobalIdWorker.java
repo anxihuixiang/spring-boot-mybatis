@@ -15,22 +15,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 全局ID生成器，保持趋势递增，尾数均匀，每秒可获取131072000个全局唯一值。
  * 实测生成千万个用时约12秒，即每秒80多万个，相对于1亿3千万来说是非常安全的。
  * 位值组成：毫秒去掉低6位(精度为64毫秒)+24位机器标识+16位进程标识+24位累加数。
- * 使用31位10进制整数或20位36进制字符串可再用1000多年，到时扩展字段长度即可。
+ * 使用31位10进制整数或20位36进制字符串可使用到3060年，到时扩展字段长度即可。
  *
  * @author Ewing
  */
 public class GlobalIdWorker {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalIdWorker.class);
     // 将时间截掉后6位（相当于除以64）约精确到1/16秒
-    private static final int timeTruncate = 6;
+    private static final int TIME_TRUNCATE = 6;
     // 机器标识24位+进程标识16位
-    private static final String macProcBit;
+    private static final String MAC_PROC_BIT;
     // 计数器 可以溢出可循环使用 实际取后24位
-    private static final AtomicInteger counter = new AtomicInteger(new SecureRandom().nextInt());
+    private static final AtomicInteger COUNTER = new AtomicInteger(new SecureRandom().nextInt());
     // 序号掩码（23个1）也是最大值8388607
-    private static final int counterMask = ~(-1 << 23);
+    private static final int COUNTER_MASK = ~(-1 << 23);
     // 序号标志位 第24位为1 保证序号总长度为24位
-    private static final int counterFlag = 1 << 23;
+    private static final int COUNTER_FLAG = 1 << 23;
 
     /**
      * 私有化构造方法。
@@ -47,26 +47,26 @@ public class GlobalIdWorker {
         int processId = createProcessIdentifier() & 0xffff | (1 << 16);
         String machineIdBit = Integer.toBinaryString(machineId).substring(1);
         String processIdBit = Integer.toBinaryString(processId).substring(1);
-        macProcBit = machineIdBit + processIdBit;
+        MAC_PROC_BIT = machineIdBit + processIdBit;
     }
 
     /**
-     * 生成全局唯一ID。
+     * 生成全局唯一的整数ID。
      */
     public static BigInteger nextBigInteger() {
-        long timestamp = System.currentTimeMillis() >>> timeTruncate;
+        long timestamp = System.currentTimeMillis() >>> TIME_TRUNCATE;
 
-        int count = counter.getAndIncrement() & counterMask;
+        int count = COUNTER.getAndIncrement() & COUNTER_MASK;
 
         // 时间位+机器与进程位+计数器位组成最终的ID
-        String idBit = Long.toBinaryString(timestamp) + macProcBit +
-                Integer.toBinaryString(count | counterFlag);
+        String idBit = Long.toBinaryString(timestamp) + MAC_PROC_BIT +
+                Integer.toBinaryString(count | COUNTER_FLAG);
 
         return new BigInteger(idBit, 2);
     }
 
     /**
-     * 获取36进制20位长度的String类型的ID。
+     * 获取36进制的String类型的ID。
      */
     public static String nextString() {
         return nextBigInteger().toString(36);

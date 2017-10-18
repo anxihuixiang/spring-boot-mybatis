@@ -1,7 +1,7 @@
 package ewing.user;
 
-import ewing.common.pagination.PageData;
-import ewing.common.pagination.PageParam;
+import ewing.common.paging.Pages;
+import ewing.common.paging.Paging;
 import ewing.entity.User;
 
 /**
@@ -18,7 +18,7 @@ public interface UserService {
 
     void updateUser(User user);
 
-    PageData<User> findUsers(PageParam pageParam, String name, Integer gender);
+    Pages<User> findUsers(Paging paging, String name, Integer gender);
 
     void deleteUser(String id);
 

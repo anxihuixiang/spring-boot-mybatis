@@ -16,9 +16,11 @@ import java.io.IOException;
 
 /**
  * 全局异常捕获，优先级高于默认错误页面。
+ *
+ * @author Ewing
  */
 @Component
-public class GlobalExceptionHandler implements HandlerExceptionResolver {
+public class ExceptionHandler implements HandlerExceptionResolver {
 
     /**
      * RequestBody返回普通文本，否则返回错误视图。
@@ -51,8 +53,9 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver {
     }
 
     private boolean hasResponseBody(Object handler) {
-        if (!(handler instanceof HandlerMethod))
+        if (!(handler instanceof HandlerMethod)) {
             return false;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         return AnnotationUtils.findAnnotation(handlerMethod.getMethod(), ResponseBody.class) != null
                 || AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), ResponseBody.class) != null;

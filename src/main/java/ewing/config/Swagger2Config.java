@@ -1,5 +1,7 @@
 package ewing.config;
 
+import ewing.StartApp;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,8 +16,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * Swagger2接口文档配置。
  */
 @Configuration
+@ConditionalOnProperty(name = "swagger.enable", havingValue = "true")
 @EnableSwagger2
 public class Swagger2Config {
+
+    private String basePackage = StartApp.class.getPackage().getName();
 
     @Bean
     public Docket createRestApi() {
@@ -27,7 +32,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ewing"))
+                .apis(RequestHandlerSelectors.basePackage(basePackage))
                 .paths(PathSelectors.any())
                 .build();
     }

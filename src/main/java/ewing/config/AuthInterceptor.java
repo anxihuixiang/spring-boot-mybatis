@@ -29,8 +29,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!(handler instanceof HandlerMethod))
+        if (!(handler instanceof HandlerMethod)) {
             return true;
+        }
         HandlerMethod method = (HandlerMethod) handler;
         Authorize authorize = method.getMethodAnnotation(Authorize.class);
         String type;
@@ -38,10 +39,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             type = authorize.type();
         } else { // 方法上没有注解才考虑类上的注解。
             authorize = ((HandlerMethod) handler).getBeanType().getAnnotation(Authorize.class);
-            if (authorize == null)
+            if (authorize == null) {
                 return true;
-            else
+            } else {
                 type = authorize.type();
+            }
         }
 
         // 权限拦截，基于Session。
@@ -77,8 +79,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
      * @param ownPermissions  拥有的权限编码。
      */
     private boolean checkPermissions(String[] needPermissions, String[] ownPermissions) throws IOException {
-        if (needPermissions == null || ownPermissions == null)
+        if (needPermissions == null || ownPermissions == null) {
             return false;
+        }
         int passCount = 0;
         for (String permissionCode : needPermissions) {
             for (String permission : ownPermissions) {

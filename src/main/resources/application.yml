@@ -24,6 +24,9 @@ spring:
       settings:
         webAllowOthers: true
 
+# 启用Swagger文档
+swagger.enable: true
+
 # MyBatis 配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml

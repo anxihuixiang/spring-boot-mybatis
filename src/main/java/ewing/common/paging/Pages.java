@@ -1,4 +1,6 @@
-package ewing.common.pagination;
+package ewing.common.paging;
+
+import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -8,30 +10,37 @@ import java.util.List;
  * @author Ewing
  * @since 2017-04-22
  **/
-public class PageData<T> {
+public class Pages<T> {
     private long total;
 
     private List<T> content;
 
-    public PageData() {
+    public Pages() {
     }
 
-    public PageData(List<T> content) {
-        if (content == null) return;
+    public Pages(List<T> content) {
+        if (content == null) {
+            return;
+        }
         this.content = content;
         this.total = content.size();
     }
 
-    public PageData(long total, List<T> content) {
+    public Pages(long total, List<T> content) {
         this.total = total;
         this.content = content;
+    }
+
+    public Pages(Page<T> page) {
+        this.total = page.isCount() ? page.getTotal() : page.size();
+        this.content = page;
     }
 
     public long getTotal() {
         return total;
     }
 
-    public PageData<T> setTotal(long total) {
+    public Pages<T> setTotal(long total) {
         this.total = total;
         return this;
     }
@@ -40,7 +49,7 @@ public class PageData<T> {
         return content;
     }
 
-    public PageData<T> setContent(List<T> content) {
+    public Pages<T> setContent(List<T> content) {
         this.content = content;
         return this;
     }

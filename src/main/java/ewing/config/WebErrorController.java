@@ -33,16 +33,14 @@ public class WebErrorController implements ErrorController {
 
     private ServerProperties serverProperties;
 
-    // 需要显示的信息列表
-    private String[] keys = new String[]{"status", "error", "exception", "message"};
-
     /**
      * 初始化WebErrorController
      */
     @Autowired
     public WebErrorController(ErrorAttributes errorAttributes, ServerProperties serverProperties) {
-        if (errorAttributes == null || serverProperties == null)
+        if (errorAttributes == null || serverProperties == null) {
             throw new IllegalArgumentException("错误页面初始化失败：参数为空！");
+        }
         this.errorAttributes = errorAttributes;
         this.serverProperties = serverProperties;
     }
@@ -52,7 +50,8 @@ public class WebErrorController implements ErrorController {
      */
     @RequestMapping(produces = "text/html")
     public void errorPage(HttpServletRequest request, HttpServletResponse response) {
-        response.setStatus(getHttpStatus(request).value());
+        HttpStatus status = getHttpStatus(request);
+        response.setStatus(status.value());
         Map<String, Object> model = getErrorAttributes(request, hasStackTrace(request));
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
@@ -62,12 +61,20 @@ public class WebErrorController implements ErrorController {
         } catch (IOException e) {
             return;
         }
-        writer.println("<html>\n<head>\n<meta charset=UTF-8/>\n" +
-                "<title>页面出错了</title>\n</head>\n<body>\n<h3>页面出错了</h3>");
-        for (String key : keys) {
-            writer.println(key + " : " + model.get(key) + "<br/>");
-        }
-        writer.print("</body>\n</html>");
+        writer.println("<html>\n<head>");
+        writer.println("<meta charset='UTF-8'>");
+        writer.println("<title>网页访问出错</title>\n</head>");
+        writer.println("<body style='text-align:center;background-color:#eee'>");
+        writer.println("<div style='width:420px;margin:5% auto'>");
+        writer.println("<h2>您访问的网页出错了</h2>");
+        writer.println("<button onclick='history.go(-1)' style='margin-right:25px'>返回前页</button>");
+        writer.println("<button onclick='location.href=\"/\"'>回到首页</button>\n<h3></h3>");
+        writer.println("<div style='text-align:left;padding:20px;background-color:#e5e5e5;border-radius:10px'>");
+        writer.println("<pre>状态: " + status + "</pre>");
+        writer.println("<pre>错误: " + model.get("error") + "</pre>");
+        writer.println("<pre>异常: " + model.get("exception") + "</pre>");
+        writer.println("<pre>信息: " + model.get("message") + "</pre>\n</div>");
+        writer.print("</div>\n</body>\n</html>");
         writer.close();
     }
 
@@ -79,10 +86,11 @@ public class WebErrorController implements ErrorController {
     public ResponseEntity<Map<String, Object>> errorJson(HttpServletRequest request) {
         Map<String, Object> model = getErrorAttributes(request, hasStackTrace(request));
         HttpStatus status = getHttpStatus(request);
-        Map<String, Object> body = new HashMap<>(keys.length);
-        for (String key : keys) {
-            body.put(key, model.get(key));
-        }
+        Map<String, Object> body = new HashMap<>(4);
+        body.put("code", status.value());
+        body.put("success", false);
+        body.put("message", model.get("message"));
+        body.put("data", model.get("error"));
         return new ResponseEntity<>(body, status);
     }
 
