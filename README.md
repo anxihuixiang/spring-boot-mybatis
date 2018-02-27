@@ -3,7 +3,7 @@
   
 响应式管理界面改自zhengAdmin，基于Bootstrap、JQuery、Layui等，前后端是独立的，可分开部署和开发、自行更换前端框架。  
   
-##### 首次启动前请修改pom.xml和application.yml中的数据库信息并执行init-data.sql。  
+##### 首次启动前请修改mybatis-generator.xml和application.yml中的数据库信息并执行init-data.sql。  
 
 ## 集成的功能：
 Spring Boot：Spring Boot和Spring基础框架，提供容器、定时任务、异步调用和其他常用功能支持。  
