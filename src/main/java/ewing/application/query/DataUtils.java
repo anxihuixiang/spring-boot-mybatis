@@ -9,7 +9,7 @@ public class DataUtils {
     private DataUtils() {
     }
 
-    public static <T, C extends Collection<T>> T getMaxOne(C collection) {
+    public static <E, C extends Collection<E>> E getMaxOne(C collection) {
         if (collection == null || collection.size() < 1) {
             return null;
         } else if (collection.size() == 1) {
@@ -24,11 +24,11 @@ public class DataUtils {
         return target;
     }
 
-    public static <E, C extends Collection<E>, T> T getMaxOneAndCopy(C collection, T target) {
-        if (collection == null || target == null) {
+    public static <E, C extends Collection<E>, T> T getMaxOneAndCopy(C source, T target) {
+        if (source == null || target == null) {
             return null;
         }
-        return copyProperties(getMaxOne(collection), target);
+        return copyProperties(getMaxOne(source), target);
     }
 
 }
