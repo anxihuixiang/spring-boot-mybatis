@@ -1,6 +1,19 @@
 # 服务配置
 server:
   port: 80
+
+# 启用Swagger文档
+swagger.enable: true
+# 启用全局方法日志
+appMethodLogger.enable: true
+
+# Https配置
+sslserver:
+  port: 443
+  keyStore: .keystore
+  keyStorePassword: changeit
+  keyStoreType: JKS
+
 # Spring配置
 spring:
   http:
@@ -10,23 +23,16 @@ spring:
   jackson: # Jackson配置
     timeZone: GMT+8
     dateFormat: yyyy-MM-dd HH:mm:ss
-  thymeleaf:
-    cache: false
   datasource: # 数据库配置
-    schema: classpath:firstdata.sql
-    url: jdbc:h2:file:./resources/h2
-    driverClassName: org.h2.Driver
-    username: test
-    password: test
-  h2: # 数据库管理
-    console:
-      enabled: true
-      settings:
-        webAllowOthers: true
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/service?useUnicode=true
+    username: service
+    password: service
 
-# 启用Swagger文档
-swagger.enable: true
-
-# MyBatis 配置
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
+# Security配置
+security:
+  ignored:
+    - assets/**
+    - vendor/**
+    - favicon.ico
+    - login.html

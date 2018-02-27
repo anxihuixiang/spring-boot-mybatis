@@ -1,12 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="zh-cn">
 <head>
-    <meta charset="UTF-8"/>
-    <title>首页</title>
+  <title>服务系统</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="vendor/fullPage/jquery.fullPage.css" rel="stylesheet"/>
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="vendor/waves/waves.min.css" rel="stylesheet"/>
+  <link href="vendor/malihu-scrollbar/jquery.mScrollbar.min.css" rel="stylesheet"/>
+  <link href="assets/index.css" rel="stylesheet"/>
 </head>
-<body style="text-align: center">
-<h2>Spring Boot Demo</h2>
-<h3><a href="/swagger-ui.html">Swagger接口文档</a></h3>
-<h3><a href="/user">用户管理模板</a></h3>
+<body id="skin-sky">
+<header id="header">
+  <!-- 顶部导航菜单 -->
+  <ul id="menu">
+    <li id="guide" class="line-trigger">
+      <div class="line-wrap">
+        <div class="line top"></div>
+        <div class="line center"></div>
+        <div class="line bottom"></div>
+      </div>
+    </li>
+    <li id="logo">
+      <a><i class="fa fa-cloud"></i></a>
+      <a id="logo_title" class="hidden-xs">服务系统</a>
+    </li>
+    <li class="pull-right">
+      <ul class="hi-menu">
+        <!-- 主题选择 -->
+        <li class="dropdown">
+          <a class="waves-effect waves-light" data-toggle="dropdown">
+            <i class="him-icon fa fa-magic"></i>
+          </a>
+          <ul class="dropdown-menu dm-icon pull-right">
+            <li class="skin-switch">请选择主题</li>
+            <li class="divider"></li>
+            <li><a class="switch-skins skin-sky" data-skin="skin-sky"></a>
+            </li>
+            <li><a class="switch-skins skin-green" data-skin="skin-green"></a>
+            </li>
+            <li><a class="switch-skins skin-pink" data-skin="skin-pink"></a>
+            </li>
+          </ul>
+        </li>
+        <!-- 全屏切换 -->
+        <li id="fullScreenBtn">
+          <a class="waves-effect waves-light" data-ma-action="fullscreen" onclick="fullPage()">
+            <i id="full-screen" class="fa fa-expand him-icon"></i></a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</header>
+<section id="main">
+  <!-- 左侧导航 -->
+  <aside id="sidebar">
+    <!-- 个人资料 -->
+    <div class="sp-profile">
+      <a class="waves-effect waves-light">
+        <div class="sp-pic">
+          <img src="assets/images/avatar.jpg"/>
+        </div>
+        <div class="sp-info">
+          <span id="nickname">管理员</span>
+          <i class="fa fa-caret-right"></i>
+        </div>
+      </a>
+      <ul class="main-menu">
+        <li>
+          <a class="waves-effect" href="logout">
+            <i class="fa fa-sign-out"></i> 退出登录</a>
+        </li>
+      </ul>
+    </div>
+    <!-- 功能菜单 -->
+    <ul id="side-menu" class="main-menu">
+      <li>
+        <a class="waves-effect" onclick="addTab('首　页', 'home')">
+          <i class="fa fa-home"></i>首　页
+        </a>
+      </li>
+    </ul>
+  </aside>
+  <!-- 中心面板 -->
+  <section id="content">
+    <div class="content_tab">
+      <div class="tab_left">
+        <a class="waves-effect waves-light">
+          <i class="fa fa-chevron-left"></i></a>
+      </div>
+      <div class="tab_right">
+        <a class="waves-effect waves-light">
+          <i class="fa fa-chevron-right"></i></a>
+      </div>
+      <ul id="tabs" class="tabs">
+        <li id="tab_home" data-index="home" data-closeable="false" class="curiframe">
+          <a class="waves-effect waves-light">首　页</a>
+        </li>
+      </ul>
+    </div>
+    <!-- 首页内容 -->
+    <div class="content_main">
+      <div id="iframe_home" class="iframe curiframe">
+        <div class="jumbotron">
+          <div class="container">
+            <h3>Spring Boot 整合常用框架组成完整可用的快速开发模板。</h3>
+            <p>更快的项目搭建、更高开发和运行效率、更灵活的应对需求变化、更好的可重构和维护性。</p>
+            <p>响应式管理界面改自zhengAdmin，前后端可分离独立开发和部署。</p>
+          </div>
+        </div>
+        <div class="container home-panel">
+          <div class="row">
+            <div class="col-md-4">
+              <h3>Spring Boot</h3>
+              <p>Spring Boot和Spring基础框架，提供容器、定时任务、异步调用和其他常用功能支持。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>Spring Security</h3>
+              <p>Spring安全框架，可满足复杂场景下的安全需求，已实现基于注解的基本权限控制体系。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>Spring MVC</h3>
+              <p>Web访问接口与控制器，Restful，全局异常，自动转换时间，静态资源访问，动态国际化支持等。</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <h3>QueryDSL</h3>
+              <p>通用高效的类型安全的查询框架，使用API覆盖标准SQL且可跨数据库，具有很高的开发和执行效率。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>QueryDSL 案例</h3>
+              <p>Maven生成插件配置、独立的参考案例（位于test目录），覆盖绝大多数应用场景，可快速上手。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>GlobalIdWorker</h3>
+              <p>全局ID生成器，支持多机多实例运行，趋势递增且尾数均匀，对分表分库非常友好，也可用于唯一命名。</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <h3>Spring Cache</h3>
+              <p>基于注解的缓存，默认使用EhCache作为本地缓存，resources目录中提供了Redis参考。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>Protostuff</h3>
+              <p>Protostuff 序列化可以大幅提高时间及空间性能，适合传输对象，比如存储到Redis等。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>Spring AOP</h3>
+              <p>使用AOP对方法日志进行统一处理，也可用做收集信息、事务处理、权限校验等。</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <h3>Swagger2</h3>
+              <p>扫描Controller及标记注解，生成接口文档，访问路径：/swagger-ui.html。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>Spring Test</h3>
+              <p>Mock测试用例参考，测试驱动开发有助于编写简洁可用和高质量的代码，并加速开发过程。</p>
+            </div>
+            <div class="col-md-4">
+              <h3>其他支持</h3>
+              <p>OkHttpUtils、RSA和AES加密、JWT、Spring Boot DevTools、Logback配置。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
 </body>
+<script src="vendor/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="vendor/waves/waves.min.js"></script>
+<script src="vendor/malihu-scrollbar/jquery.mScrollbar.min.js"></script>
+<script src="vendor/BootstrapMenu.min.js"></script>
+<script src="vendor/jquery.jdirk.min.js"></script>
+<script src="vendor/device.min.js"></script>
+<script src="assets/index.js"></script>
 </html>

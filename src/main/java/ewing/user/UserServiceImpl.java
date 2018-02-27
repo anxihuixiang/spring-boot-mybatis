@@ -1,99 +1,123 @@
 package ewing.user;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import ewing.application.AppException;
-import ewing.common.GlobalIdWorker;
-import ewing.common.paging.Pages;
-import ewing.common.paging.Paging;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.dml.SQLUpdateClause;
+import ewing.application.AppAsserts;
+import ewing.application.query.Page;
+import ewing.entity.Role;
 import ewing.entity.User;
-import ewing.entity.UserExample;
-import ewing.mapper.UserMapper;
+import ewing.entity.UserRole;
+import ewing.user.dao.UserDao;
+import ewing.user.dao.UserRoleDao;
+import ewing.user.vo.FindUserParam;
+import ewing.user.vo.UserWithRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户服务实现。
- *
- * @author Ewing
- * @since 2017-04-21
  **/
 @Service
-@Transactional
-@CacheConfig(cacheNames = "UserCache")
+@Transactional(rollbackFor = Throwable.class)
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
+    @Autowired
+    private UserRoleDao userRoleDao;
 
     @Override
-    public User addUser(User user) {
-        if (!StringUtils.hasText(user.getName())) {
-            throw new AppException("用户名不能为空！");
+    public Long addUserWithRole(UserWithRole userWithRole) {
+        AppAsserts.notNull(userWithRole, "用户不能为空！");
+        AppAsserts.hasText(userWithRole.getUsername(), "用户名不能为空！");
+        AppAsserts.hasText(userWithRole.getNickname(), "昵称不能为空！");
+        AppAsserts.hasText(userWithRole.getPassword(), "密码不能为空！");
+        AppAsserts.hasText(userWithRole.getGender(), "性别不能为空！");
+        AppAsserts.yes(userDao.countWhere(
+                qUser.username.eq(userWithRole.getUsername())) < 1,
+                "用户名已被使用！");
+
+        userWithRole.setCreateTime(new Date());
+        userDao.insertWithKey(userWithRole);
+        addUserRoles(userWithRole);
+        return userWithRole.getUserId();
+    }
+
+    private void addUserRoles(UserWithRole userWithRole) {
+        List<Role> roles = userWithRole.getRoles();
+        if (roles != null && !roles.isEmpty()) {
+            List<UserRole> userRoles = new ArrayList<>(roles.size());
+            for (Role role : roles) {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(userWithRole.getUserId());
+                userRole.setRoleId(role.getRoleId());
+                userRole.setCreateTime(new Date());
+                userRoles.add(userRole);
+            }
+            userRoleDao.insertBeans(userRoles.toArray());
         }
-        UserExample example = new UserExample();
-        example.createCriteria().andNameEqualTo(user.getName());
-        if (userMapper.countByExample(example) > 0) {
-            throw new AppException("用户名已被使用！");
-        }
-        if (!StringUtils.hasText(user.getPassword())) {
-            throw new AppException("密码不能为空！");
-        }
-        user.setUserId(GlobalIdWorker.nextString());
-        user.setCreateTime(new Date());
-        userMapper.insertSelective(user);
-        return user;
     }
 
     @Override
-    @Cacheable(unless = "#result==null")
-    public User getUser(String id) {
-        return userMapper.selectByPrimaryKey(id);
+    @Cacheable(cacheNames = "UserCache", key = "#userId", unless = "#result==null")
+    public User getUser(Long userId) {
+        AppAsserts.notNull(userId, "用户ID不能为空！");
+        return userDao.selectByKey(qUser, userId);
     }
 
     @Override
-    @CacheEvict(key = "#user.userId")
-    public void updateUser(User user) {
-        userMapper.updateByPrimaryKeySelective(user);
-    }
+    @CacheEvict(cacheNames = "UserCache", key = "#userWithRole.userId")
+    public long updateUserWithRole(UserWithRole userWithRole) {
+        AppAsserts.notNull(userWithRole, "用户不能为空！");
+        AppAsserts.notNull(userWithRole.getUserId(), "用户ID不能为空！");
 
-    @Override
-    public Pages<User> findUsers(Paging paging, String name, Integer gender) {
-        UserExample example = new UserExample();
-        UserExample.Criteria criteria = example.createCriteria();
+        // 更新用户的角色列表
+        userRoleDao.deleteWhere(qUserRole.userId.eq(userWithRole.getUserId()));
+        addUserRoles(userWithRole);
 
-        if (StringUtils.hasText(name)) {
-            criteria.andNameLike("%" + name + "%");
+        // 更新用户
+        SQLUpdateClause update = userDao.updaterByKey(userWithRole.getUserId());
+        if (StringUtils.hasText(userWithRole.getNickname())) {
+            update.set(qUser.nickname, userWithRole.getNickname());
         }
-
-        if (gender != null) {
-            criteria.andGenderEqualTo(gender);
+        if (StringUtils.hasText(userWithRole.getPassword())) {
+            update.set(qUser.password, userWithRole.getPassword());
         }
-
-        Page<User> page = PageHelper.offsetPage(paging.getOffset(),
-                paging.getLimit(), paging.isCount());
-
-        userMapper.selectByExample(example);
-
-        return new Pages<>(page);
+        if (StringUtils.hasText(userWithRole.getGender())) {
+            update.set(qUser.gender, userWithRole.getGender());
+        }
+        if (userWithRole.getBirthday() != null) {
+            update.set(qUser.birthday, userWithRole.getBirthday());
+        }
+        return update.execute();
     }
 
     @Override
-    @CacheEvict
-    public void deleteUser(String id) {
-        userMapper.deleteByPrimaryKey(id);
+    public Page<UserWithRole> findUserWithRole(FindUserParam findUserParam) {
+        BooleanExpression expression = Expressions.TRUE;
+        // 用户名
+        expression = expression.and(StringUtils.hasText(findUserParam.getUsername())
+                ? qUser.username.contains(findUserParam.getUsername()) : null);
+        // 昵称
+        expression = expression.and(StringUtils.hasText(findUserParam.getNickname())
+                ? qUser.nickname.contains(findUserParam.getNickname()) : null);
+        return userDao.findUserWithRole(findUserParam, expression);
     }
 
     @Override
-    public void clearUsers() {
-        userMapper.deleteByExample(new UserExample());
+    @CacheEvict(cacheNames = "UserCache", key = "#userId")
+    public long deleteUser(Long userId) {
+        AppAsserts.notNull(userId, "用户ID不能为空！");
+        return userDao.deleteByKey(userId);
     }
 
 }

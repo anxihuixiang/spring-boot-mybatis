@@ -1,26 +1,23 @@
 package ewing.user;
 
-import ewing.common.paging.Pages;
-import ewing.common.paging.Paging;
+import ewing.application.query.Page;
 import ewing.entity.User;
+import ewing.user.vo.FindUserParam;
+import ewing.user.vo.UserWithRole;
 
 /**
  * 用户服务接口。
- *
- * @author Ewing
- * @since 2017-04-21
  **/
-public interface UserService {
+public interface UserService extends UserBeans {
 
-    User addUser(User user);
+    User getUser(Long userId);
 
-    User getUser(String id);
+    Long addUserWithRole(UserWithRole userWithRole);
 
-    void updateUser(User user);
+    long updateUserWithRole(UserWithRole userWithRole);
 
-    Pages<User> findUsers(Paging paging, String name, Integer gender);
+    Page<UserWithRole> findUserWithRole(FindUserParam findUserParam);
 
-    void deleteUser(String id);
+    long deleteUser(Long userId);
 
-    void clearUsers();
 }
