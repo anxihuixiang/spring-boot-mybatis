@@ -1,27 +1,21 @@
 package ewing.entity;
 
-import javax.annotation.Generated;
-import java.io.Serializable;
+import java.util.Date;
 
-/**
- * Authority is a Querydsl bean type
- */
-@Generated("com.querydsl.codegen.BeanSerializer")
-public class Authority implements Serializable {
-
+public class Authority {
     private Long authorityId;
-
-    private String code;
-
-    private String content;
-
-    private java.util.Date createTime;
 
     private String name;
 
-    private Long parentId;
+    private String code;
 
     private String type;
+
+    private String content;
+
+    private Long parentId;
+
+    private Date createTime;
 
     public Long getAuthorityId() {
         return authorityId;
@@ -31,12 +25,28 @@ public class Authority implements Serializable {
         this.authorityId = authorityId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.code = code == null ? null : code.trim();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
     public String getContent() {
@@ -44,23 +54,7 @@ public class Authority implements Serializable {
     }
 
     public void setContent(String content) {
-        this.content = content;
-    }
-
-    public java.util.Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(java.util.Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.content = content == null ? null : content.trim();
     }
 
     public Long getParentId() {
@@ -71,18 +65,11 @@ public class Authority implements Serializable {
         this.parentId = parentId;
     }
 
-    public String getType() {
-        return type;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
-
-    @Override
-    public String toString() {
-        return "authorityId = " + authorityId + ", code = " + code + ", content = " + content + ", createTime = " + createTime + ", name = " + name + ", parentId = " + parentId + ", type = " + type;
-    }
-
 }
-

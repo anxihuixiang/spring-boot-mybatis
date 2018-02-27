@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 安全服务接口。
  **/
-public interface SecurityService extends SecurityBeans {
+public interface SecurityService {
 
     SecurityUser getSecurityUser(String username);
 

@@ -8,7 +8,7 @@ import ewing.user.vo.UserWithRole;
 /**
  * 用户服务接口。
  **/
-public interface UserService extends UserBeans {
+public interface UserService {
 
     User getUser(Long userId);
 

@@ -1,27 +1,13 @@
 package ewing.entity;
 
-import javax.annotation.Generated;
-import java.io.Serializable;
+import java.util.Date;
 
-/**
- * UserRole is a Querydsl bean type
- */
-@Generated("com.querydsl.codegen.BeanSerializer")
-public class UserRole implements Serializable {
-
-    private java.util.Date createTime;
-
+public class UserRole {
     private Long roleId;
 
     private Long userId;
 
-    public java.util.Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(java.util.Date createTime) {
-        this.createTime = createTime;
-    }
+    private Date createTime;
 
     public Long getRoleId() {
         return roleId;
@@ -39,10 +25,11 @@ public class UserRole implements Serializable {
         this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "createTime = " + createTime + ", roleId = " + roleId + ", userId = " + userId;
+    public Date getCreateTime() {
+        return createTime;
     }
 
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
-

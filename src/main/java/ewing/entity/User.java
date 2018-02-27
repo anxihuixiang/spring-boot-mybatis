@@ -1,67 +1,21 @@
 package ewing.entity;
 
-import javax.annotation.Generated;
-import java.io.Serializable;
+import java.util.Date;
 
-/**
- * User is a Querydsl bean type
- */
-@Generated("com.querydsl.codegen.BeanSerializer")
-public class User implements Serializable {
-
-    private java.sql.Date birthday;
-
-    private java.util.Date createTime;
-
-    private String gender;
-
-    private String nickname;
-
-    private String password;
-
+public class User {
     private Long userId;
 
     private String username;
 
-    public java.sql.Date getBirthday() {
-        return birthday;
-    }
+    private String password;
 
-    public void setBirthday(java.sql.Date birthday) {
-        this.birthday = birthday;
-    }
+    private String nickname;
 
-    public java.util.Date getCreateTime() {
-        return createTime;
-    }
+    private String gender;
 
-    public void setCreateTime(java.util.Date createTime) {
-        this.createTime = createTime;
-    }
+    private Date birthday;
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private Date createTime;
 
     public Long getUserId() {
         return userId;
@@ -76,13 +30,46 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username == null ? null : username.trim();
     }
 
-    @Override
-    public String toString() {
-        return "birthday = " + birthday + ", createTime = " + createTime + ", gender = " + gender + ", nickname = " + nickname + ", password = " + password + ", userId = " + userId + ", username = " + username;
+    public String getPassword() {
+        return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender == null ? null : gender.trim();
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
-

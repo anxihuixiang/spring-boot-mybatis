@@ -1,6 +1,5 @@
 package ewing.common;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import ewing.application.AppAsserts;
 import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
@@ -8,6 +7,7 @@ import ewing.application.query.Page;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.entity.Dictionary;
+import ewing.mapper.DictionaryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +24,13 @@ import java.util.List;
 public class DictionaryServiceImpl implements DictionaryService {
 
     @Autowired
-    private DictionaryDao dictionaryDao;
+    private DictionaryMapper dictionaryMapper;
 
     @Override
     public Page<Dictionary> findWithSubDictionary(
             FindDictionaryParam findDictionaryParam) {
         AppAsserts.notNull(findDictionaryParam, "查询参数不能为空！");
-        return dictionaryDao.findWithSubDictionary(findDictionaryParam);
+        return null /*dictionaryMapper.findWithSubDictionary(findDictionaryParam)*/;
     }
 
     @Override
@@ -41,8 +41,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         // 处理父字典和根字典的关系
         if (dictionary.getParentId() != null) {
-            Dictionary parent = dictionaryDao.selectOne(
-                    qDictionary.dictionaryId.eq(dictionary.getParentId()));
+            Dictionary parent = null /*dictionaryMapper.selectOne(
+                    qDictionary.dictionaryId.eq(dictionary.getParentId()))*/;
             if (parent == null) {
                 throw new AppRunException("父字典项不存在！");
             } else {
@@ -55,21 +55,21 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
 
         // 相同位置下的字典名称或值不能重复
-        BooleanExpression expression = dictionary.getParentId() == null ?
+        /*BooleanExpression expression = dictionary.getParentId() == null ?
                 qDictionary.parentId.isNull() :
                 qDictionary.parentId.eq(dictionary.getParentId());
 
-        AppAsserts.yes(dictionaryDao.countWhere(expression
+        AppAsserts.yes(dictionaryMapper.countWhere(expression
                         .and(qDictionary.name.eq(dictionary.getName())
                                 .or(qDictionary.value.eq(dictionary.getValue())))) < 1,
-                "相同位置下的字典名或值不能重复！");
+                "相同位置下的字典名或值不能重复！");*/
 
         // 详情不允许为空串
         if (!StringUtils.hasText(dictionary.getDetail())) {
             dictionary.setDetail(null);
         }
         dictionary.setCreateTime(new Date());
-        dictionaryDao.insertWithKey(dictionary);
+        dictionaryMapper.insertSelective(dictionary);
     }
 
     @Override
@@ -80,16 +80,16 @@ public class DictionaryServiceImpl implements DictionaryService {
         AppAsserts.hasText(dictionary.getValue(), "字典值不能为空！");
 
         // 相同位置下的字典名称或值不能重复
-        BooleanExpression expression = qDictionary
+        /*BooleanExpression expression = qDictionary
                 .dictionaryId.ne(dictionary.getDictionaryId())
                 .and(dictionary.getParentId() == null ?
                         qDictionary.parentId.isNull() :
                         qDictionary.parentId.eq(dictionary.getParentId()));
 
-        AppAsserts.yes(dictionaryDao.countWhere(expression
+        AppAsserts.yes(dictionaryMapper.countWhere(expression
                         .and(qDictionary.name.eq(dictionary.getName())
                                 .or(qDictionary.value.eq(dictionary.getValue())))) < 1,
-                "相同位置下的字典名或值不能重复！");
+                "相同位置下的字典名或值不能重复！");*/
 
         // 不能修改父字典和根字典
         dictionary.setRootId(null);
@@ -98,24 +98,24 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (!StringUtils.hasText(dictionary.getDetail())) {
             dictionary.setDetail(null);
         }
-        dictionaryDao.updateBean(dictionary);
+        dictionaryMapper.updateByPrimaryKeySelective(dictionary);
     }
 
     @Override
     public void deleteDictionary(Long dictionaryId) {
         AppAsserts.notNull(dictionaryId, "字典ID不能为空！");
-        AppAsserts.notNull(dictionaryDao.selectByKey(dictionaryId),
+        /*AppAsserts.notNull(dictionaryMapper.selectByKey(dictionaryId),
                 "该字典不存在或已删除！");
-        AppAsserts.yes(dictionaryDao.countWhere(qDictionary.parentId.eq(dictionaryId)) < 1,
-                "请先删除该字典的所有子项！");
+        AppAsserts.yes(dictionaryMapper.countWhere(qDictionary.parentId.eq(dictionaryId)) < 1,
+                "请先删除该字典的所有子项！");*/
 
-        dictionaryDao.deleteByKey(dictionaryId);
+        dictionaryMapper.deleteByPrimaryKey(dictionaryId);
     }
 
     @Override
     public List<DictionaryNode> findDictionaryTrees(String[] rootValues) {
         AppAsserts.notNull(rootValues, "查询参数不能为空！");
-        List<DictionaryNode> dictionaries = dictionaryDao.findRootSubDictionaries(rootValues);
+        List<DictionaryNode> dictionaries = null /*dictionaryMapper.findRootSubDictionaries(rootValues)*/;
         return TreeUtils.toTree(dictionaries);
     }
 

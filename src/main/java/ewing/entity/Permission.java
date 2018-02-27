@@ -1,41 +1,19 @@
 package ewing.entity;
 
-import javax.annotation.Generated;
-import java.io.Serializable;
+import java.util.Date;
 
-/**
- * Permission is a Querydsl bean type
- */
-@Generated("com.querydsl.codegen.BeanSerializer")
-public class Permission implements Serializable {
-
-    private String action;
-
-    private java.util.Date createTime;
-
+public class Permission {
     private Long permissionId;
-
-    private String targetId;
-
-    private String targetType;
 
     private Long userId;
 
-    public String getAction() {
-        return action;
-    }
+    private String action;
 
-    public void setAction(String action) {
-        this.action = action;
-    }
+    private String targetType;
 
-    public java.util.Date getCreateTime() {
-        return createTime;
-    }
+    private String targetId;
 
-    public void setCreateTime(java.util.Date createTime) {
-        this.createTime = createTime;
-    }
+    private Date createTime;
 
     public Long getPermissionId() {
         return permissionId;
@@ -43,22 +21,6 @@ public class Permission implements Serializable {
 
     public void setPermissionId(Long permissionId) {
         this.permissionId = permissionId;
-    }
-
-    public String getTargetId() {
-        return targetId;
-    }
-
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
-
-    public String getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(String targetType) {
-        this.targetType = targetType;
     }
 
     public Long getUserId() {
@@ -69,10 +31,35 @@ public class Permission implements Serializable {
         this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "action = " + action + ", createTime = " + createTime + ", permissionId = " + permissionId + ", targetId = " + targetId + ", targetType = " + targetType + ", userId = " + userId;
+    public String getAction() {
+        return action;
     }
 
-}
+    public void setAction(String action) {
+        this.action = action == null ? null : action.trim();
+    }
 
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType == null ? null : targetType.trim();
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId == null ? null : targetId.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+}

@@ -29,6 +29,10 @@ spring:
     username: mybatis
     password: mybatis
 
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
 # Security配置
 security:
   ignored:
