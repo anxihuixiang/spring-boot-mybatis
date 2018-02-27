@@ -1,12 +1,14 @@
 package ewing.security;
 
 import ewing.application.AppAsserts;
+import ewing.application.exception.AppRunException;
 import ewing.application.query.Paging;
 import ewing.entity.*;
 import ewing.mapper.*;
 import ewing.security.vo.AuthorityNode;
 import ewing.security.vo.FindRoleParam;
 import ewing.security.vo.RoleWithAuthority;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -41,7 +44,17 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public SecurityUser getSecurityUser(String username) {
         AppAsserts.hasText(username, "用户名不能为空！");
-        return null /*userMapper.getSecurityUser(username)*/;
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(username);
+        List<User> users = userMapper.selectByExample(example);
+        if (users.size() == 0) {
+            return null;
+        } else if (users.size() > 1) {
+            throw new AppRunException("用户名存在重复！");
+        }
+        SecurityUser securityUser = new SecurityUser();
+        BeanUtils.copyProperties(users.get(0), securityUser);
+        return securityUser;
     }
 
     @Override
@@ -109,7 +122,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public List<AuthorityNode> getAuthorityTree() {
-        return null /*TreeUtils.toTree(authorityMapper.selector()
+        return Collections.emptyList() /*TreeUtils.toTree(authorityMapper.selector()
                 .want(Projections.bean(AuthorityNode.class, qAuthority.all()))
                 .fetch())*/;
     }
@@ -117,7 +130,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public List<AuthorityNode> getUserAuthorities(Long userId) {
         AppAsserts.notNull(userId, "用户ID不能为空！");
-        return null /*authorityMapper.getUserAuthorities(userId)*/;
+        return Collections.emptyList() /*authorityMapper.getUserAuthorities(userId)*/;
     }
 
     @Override
