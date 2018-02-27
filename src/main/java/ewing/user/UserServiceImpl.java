@@ -1,7 +1,7 @@
 package ewing.user;
 
 import ewing.application.AppAsserts;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.entity.Role;
 import ewing.entity.User;
 import ewing.entity.UserRole;
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserWithRole> findUserWithRole(FindUserParam findUserParam) {
+    public Paging<UserWithRole> findUserWithRole(FindUserParam findUserParam) {
         /*BooleanExpression expression = Expressions.TRUE;
         // 用户名
         expression = expression.and(StringUtils.hasText(findUserParam.getUsername())

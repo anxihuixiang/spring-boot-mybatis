@@ -1,7 +1,7 @@
 package ewing.security;
 
 import ewing.application.AppAsserts;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.entity.*;
 import ewing.mapper.*;
 import ewing.security.vo.AuthorityNode;
@@ -126,7 +126,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public Page<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam) {
+    public Paging<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam) {
         return null /*roleMapper.findRoleWithAuthority(findRoleParam,
                 StringUtils.hasText(findRoleParam.getSearch()) ?
                         qRole.name.contains(findRoleParam.getSearch()) : null)*/;

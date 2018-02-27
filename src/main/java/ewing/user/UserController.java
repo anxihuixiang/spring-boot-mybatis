@@ -1,7 +1,7 @@
 package ewing.user;
 
 import ewing.application.ResultMessage;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.entity.Role;
 import ewing.entity.User;
 import ewing.security.AuthorityCodes;
@@ -39,7 +39,7 @@ public class UserController {
     @ApiOperation("分页查找用户")
     @PostMapping("/findUserWithRole")
     @PreAuthorize("hasAuthority('" + AuthorityCodes.USER_MANAGE + "')")
-    public ResultMessage<Page<UserWithRole>> findUserWithRole(@RequestBody FindUserParam findUserParam) {
+    public ResultMessage<Paging<UserWithRole>> findUserWithRole(@RequestBody FindUserParam findUserParam) {
         return new ResultMessage<>(userService.findUserWithRole(findUserParam));
     }
 

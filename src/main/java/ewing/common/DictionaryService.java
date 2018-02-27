@@ -1,6 +1,6 @@
 package ewing.common;
 
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.entity.Dictionary;
@@ -12,7 +12,7 @@ import java.util.List;
  **/
 public interface DictionaryService {
 
-    Page<Dictionary> findWithSubDictionary(FindDictionaryParam findDictionaryParam);
+    Paging<Dictionary> findWithSubDictionary(FindDictionaryParam findDictionaryParam);
 
     void addDictionary(Dictionary dictionary);
 

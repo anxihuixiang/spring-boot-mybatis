@@ -1,5 +1,7 @@
 package ewing.application.query;
 
+import com.github.pagehelper.Page;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -8,15 +10,15 @@ import java.util.function.Consumer;
  *
  * @author Ewing
  **/
-public class Page<T> {
+public class Paging<T> {
     private long total;
 
     private List<T> rows;
 
-    public Page() {
+    public Paging() {
     }
 
-    public Page(List<T> rows) {
+    public Paging(List<T> rows) {
         if (rows == null) {
             return;
         }
@@ -24,16 +26,21 @@ public class Page<T> {
         this.total = rows.size();
     }
 
-    public Page(long total, List<T> rows) {
+    public Paging(long total, List<T> rows) {
         this.total = total;
         this.rows = rows;
+    }
+
+    public Paging(Page<T> page) {
+        this.total = page.isCount() ? page.getTotal() : page.size();
+        this.rows = page;
     }
 
     public long getTotal() {
         return total;
     }
 
-    public Page<T> setTotal(long total) {
+    public Paging<T> setTotal(long total) {
         this.total = total;
         return this;
     }
@@ -42,12 +49,12 @@ public class Page<T> {
         return rows;
     }
 
-    public Page<T> setRows(List<T> rows) {
+    public Paging<T> setRows(List<T> rows) {
         this.rows = rows;
         return this;
     }
 
-    public Page<T> forEach(Consumer<T> consumer) {
+    public Paging<T> forEach(Consumer<T> consumer) {
         if (rows != null && rows.size() > 0) {
             this.rows.forEach(consumer);
         }

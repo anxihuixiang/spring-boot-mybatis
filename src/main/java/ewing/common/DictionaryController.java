@@ -1,7 +1,7 @@
 package ewing.common;
 
 import ewing.application.ResultMessage;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.entity.Dictionary;
@@ -55,7 +55,7 @@ public class DictionaryController {
     @ApiOperation("查询字典项及子项")
     @PostMapping("/findWithSubDictionary")
     @PreAuthorize("hasAuthority('" + AuthorityCodes.DICTIONARY_MANAGE + "')")
-    public ResultMessage<Page<Dictionary>> findWithSubDictionary(
+    public ResultMessage<Paging<Dictionary>> findWithSubDictionary(
             @RequestBody FindDictionaryParam findDictionaryParam) {
         return new ResultMessage<>(dictionaryService
                 .findWithSubDictionary(findDictionaryParam));

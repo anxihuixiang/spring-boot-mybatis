@@ -4,7 +4,7 @@ import ewing.application.RequestUtils;
 import ewing.application.ResultMessage;
 import ewing.application.common.OkHttpUtils;
 import ewing.application.exception.AppRunException;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.entity.Authority;
 import ewing.security.vo.AuthorityNode;
 import ewing.security.vo.FindRoleParam;
@@ -114,7 +114,7 @@ public class SecurityController {
     @ApiOperation("分页查找角色带权限")
     @PostMapping("/findRoleWithAuthority")
     @PreAuthorize("hasAuthority('" + AuthorityCodes.ROLE_MANAGE + "')")
-    public ResultMessage<Page<RoleWithAuthority>> findRoleWithAuthority(
+    public ResultMessage<Paging<RoleWithAuthority>> findRoleWithAuthority(
             @RequestBody FindRoleParam findRoleParam) {
         return new ResultMessage<>(securityService.findRoleWithAuthority(findRoleParam));
     }

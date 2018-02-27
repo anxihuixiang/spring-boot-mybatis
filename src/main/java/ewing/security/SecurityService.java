@@ -1,6 +1,6 @@
 package ewing.security;
 
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.entity.Authority;
 import ewing.entity.Role;
 import ewing.security.vo.AuthorityNode;
@@ -30,7 +30,7 @@ public interface SecurityService {
 
     List<Role> getAllRoles();
 
-    Page<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam);
+    Paging<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam);
 
     void addRoleWithAuthority(RoleWithAuthority roleWithAuthority);
 

@@ -3,7 +3,7 @@ package ewing.common;
 import ewing.application.AppAsserts;
 import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
-import ewing.application.query.Page;
+import ewing.application.query.Paging;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.entity.Dictionary;
@@ -27,7 +27,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     private DictionaryMapper dictionaryMapper;
 
     @Override
-    public Page<Dictionary> findWithSubDictionary(
+    public Paging<Dictionary> findWithSubDictionary(
             FindDictionaryParam findDictionaryParam) {
         AppAsserts.notNull(findDictionaryParam, "查询参数不能为空！");
         return null /*dictionaryMapper.findWithSubDictionary(findDictionaryParam)*/;
