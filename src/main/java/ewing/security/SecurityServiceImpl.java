@@ -1,14 +1,13 @@
 package ewing.security;
 
 import ewing.application.AppAsserts;
-import ewing.application.exception.AppRunException;
+import ewing.application.query.DataUtils;
 import ewing.application.query.Paging;
 import ewing.entity.*;
 import ewing.mapper.*;
 import ewing.security.vo.AuthorityNode;
 import ewing.security.vo.FindRoleParam;
 import ewing.security.vo.RoleWithAuthority;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -47,14 +46,7 @@ public class SecurityServiceImpl implements SecurityService {
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<User> users = userMapper.selectByExample(example);
-        if (users.size() == 0) {
-            return null;
-        } else if (users.size() > 1) {
-            throw new AppRunException("用户名存在重复！");
-        }
-        SecurityUser securityUser = new SecurityUser();
-        BeanUtils.copyProperties(users.get(0), securityUser);
-        return securityUser;
+        return DataUtils.getMaxOneAndCopy(users, new SecurityUser());
     }
 
     @Override
