@@ -30,7 +30,7 @@ public class Dictionary {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public String getValue() {
@@ -38,7 +38,7 @@ public class Dictionary {
     }
 
     public void setValue(String value) {
-        this.value = value == null ? null : value.trim();
+        this.value = value;
     }
 
     public String getDetail() {
@@ -46,7 +46,7 @@ public class Dictionary {
     }
 
     public void setDetail(String detail) {
-        this.detail = detail == null ? null : detail.trim();
+        this.detail = detail;
     }
 
     public Long getParentId() {

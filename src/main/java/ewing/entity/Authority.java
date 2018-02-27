@@ -30,7 +30,7 @@ public class Authority {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public String getCode() {
@@ -38,7 +38,7 @@ public class Authority {
     }
 
     public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
+        this.code = code;
     }
 
     public String getType() {
@@ -46,7 +46,7 @@ public class Authority {
     }
 
     public void setType(String type) {
-        this.type = type == null ? null : type.trim();
+        this.type = type;
     }
 
     public String getContent() {
@@ -54,7 +54,7 @@ public class Authority {
     }
 
     public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+        this.content = content;
     }
 
     public Long getParentId() {

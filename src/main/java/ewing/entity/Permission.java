@@ -36,7 +36,7 @@ public class Permission {
     }
 
     public void setAction(String action) {
-        this.action = action == null ? null : action.trim();
+        this.action = action;
     }
 
     public String getTargetType() {
@@ -44,7 +44,7 @@ public class Permission {
     }
 
     public void setTargetType(String targetType) {
-        this.targetType = targetType == null ? null : targetType.trim();
+        this.targetType = targetType;
     }
 
     public String getTargetId() {
@@ -52,7 +52,7 @@ public class Permission {
     }
 
     public void setTargetId(String targetId) {
-        this.targetId = targetId == null ? null : targetId.trim();
+        this.targetId = targetId;
     }
 
     public Date getCreateTime() {
