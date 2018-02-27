@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ewing</groupId>
-    <artifactId>spring-boot-service</artifactId>
+    <artifactId>spring-boot-mybatis</artifactId>
     <version>2.3.0</version>
     <packaging>jar</packaging>
-    <name>Spring Boot Service</name>
-    <description>Spring Boot Service</description>
+    <name>Spring Boot MyBatis</name>
+    <description>Spring Boot MyBatis</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -24,7 +24,7 @@
     </properties>
 
     <build>
-        <finalName>spring-boot-service</finalName>
+        <finalName>spring-boot-mybatis</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
