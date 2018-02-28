@@ -25,10 +25,11 @@ public class DataUtils {
     }
 
     public static <E, C extends Collection<E>, T> T getMaxOneAndCopy(C source, T target) {
-        if (source == null || target == null) {
-            return null;
+        E one = getMaxOne(source);
+        if (one == null || target == null) {
+            return target;
         }
-        return copyProperties(getMaxOne(source), target);
+        return copyProperties(one, target);
     }
 
 }
