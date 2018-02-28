@@ -23,7 +23,7 @@ public class DataUtils {
     }
 
     /**
-     * 获取最多只有一个元素的集合中的元素。
+     * 获取集合中的第一个元素。
      */
     public static <E, C extends Collection<E>> E getFirstOne(C collection) {
         if (collection == null || collection.size() < 1) {
@@ -46,6 +46,17 @@ public class DataUtils {
      */
     public static <E, C extends Collection<E>, T> T getMaxOneAndCopy(C source, T target) {
         E one = getMaxOne(source);
+        if (one == null || target == null) {
+            return target;
+        }
+        return copyProperties(one, target);
+    }
+
+    /**
+     * 获取集合中的第一个元素，复制该元素的属性并返回目标对象。
+     */
+    public static <E, C extends Collection<E>, T> T getFirstOneAndCopy(C source, T target) {
+        E one = getFirstOne(source);
         if (one == null || target == null) {
             return target;
         }
