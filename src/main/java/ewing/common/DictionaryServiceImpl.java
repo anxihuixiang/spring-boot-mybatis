@@ -32,7 +32,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Paging<Dictionary> findWithSubDictionary(
             FindDictionaryParam findDictionaryParam) {
         AppAsserts.notNull(findDictionaryParam, "查询参数不能为空！");
-        return null /*dictionaryDao.findWithSubDictionary(findDictionaryParam)*/;
+        long total = dictionaryDao.countDictionary(findDictionaryParam);
+        List<Dictionary> dictionaries = dictionaryDao.findWithSubDictionary(findDictionaryParam);
+        return new Paging<>(total, dictionaries);
     }
 
     @Override
