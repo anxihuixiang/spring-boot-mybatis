@@ -3,11 +3,13 @@ package ewing.common;
 import ewing.application.AppAsserts;
 import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
+import ewing.application.query.DataUtils;
 import ewing.application.query.Paging;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.query.dao.DictionaryDao;
 import ewing.query.entity.Dictionary;
+import ewing.query.entity.DictionaryExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +43,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         // 处理父字典和根字典的关系
         if (dictionary.getParentId() != null) {
-            Dictionary parent = null /*dictionaryDao.selectOne(
-                    qDictionary.dictionaryId.eq(dictionary.getParentId()))*/;
+            DictionaryExample example = new DictionaryExample();
+            example.createCriteria().andParentIdEqualTo(dictionary.getParentId());
+            Dictionary parent = DataUtils.getMaxOne(dictionaryDao.selectByExample(example));
             if (parent == null) {
                 throw new AppRunException("父字典项不存在！");
             } else {
@@ -55,14 +58,9 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
 
         // 相同位置下的字典名称或值不能重复
-        /*BooleanExpression expression = dictionary.getParentId() == null ?
-                qDictionary.parentId.isNull() :
-                qDictionary.parentId.eq(dictionary.getParentId());
-
-        AppAsserts.yes(dictionaryDao.countWhere(expression
-                        .and(qDictionary.name.eq(dictionary.getName())
-                                .or(qDictionary.value.eq(dictionary.getValue())))) < 1,
-                "相同位置下的字典名或值不能重复！");*/
+        AppAsserts.yes(dictionaryDao.countSame(dictionary.getParentId(),
+                dictionary.getName(), dictionary.getValue()) < 1,
+                "相同位置下的字典名或值不能重复！");
 
         // 详情不允许为空串
         if (!StringUtils.hasText(dictionary.getDetail())) {

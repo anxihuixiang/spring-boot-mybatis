@@ -35,6 +35,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     use-generated-keys: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # Security配置
 security:

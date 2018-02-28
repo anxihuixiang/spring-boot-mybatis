@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.DictionaryDao">
-
+  <select id="countSame" resultType="java.lang.Long">
+    select count(*)
+    from dictionary
+    where
+    <choose>
+      <when test="parentId == null">
+        parent_id is null
+      </when>
+      <otherwise>
+        parent_id = #{parentId}
+      </otherwise>
+    </choose>
+    and (name = #{name} or value = #{value})
+  </select>
 </mapper>
