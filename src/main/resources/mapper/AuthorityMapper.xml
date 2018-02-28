@@ -240,4 +240,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where authority_id = #{authorityId,jdbcType=BIGINT}
   </update>
+
+  <!--以下是手动添加的代码-->
+
+  <select id="getUserAuthorities" parameterType="java.lang.Long"
+          resultType="ewing.security.vo.AuthorityNode">
+    select a.authority_id, a.name, a.code, a.type, a.content, a.parent_id
+    from authority a
+    join role_authority ra on a.authority_id = ra.authority_id
+    join role r on r.role_id = ra.role_id
+    join user_role ur on r.role_id = ur.role_id
+    where ur.user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

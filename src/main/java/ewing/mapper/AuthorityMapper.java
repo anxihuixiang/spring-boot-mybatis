@@ -3,6 +3,8 @@ package ewing.mapper;
 import ewing.entity.Authority;
 import ewing.entity.AuthorityExample;
 import java.util.List;
+
+import ewing.security.vo.AuthorityNode;
 import org.apache.ibatis.annotations.Param;
 
 public interface AuthorityMapper {
@@ -27,4 +29,6 @@ public interface AuthorityMapper {
     int updateByPrimaryKeySelective(Authority record);
 
     int updateByPrimaryKey(Authority record);
+
+    List<AuthorityNode> getUserAuthorities(Long userId);
 }

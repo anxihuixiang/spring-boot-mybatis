@@ -122,7 +122,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public List<AuthorityNode> getUserAuthorities(Long userId) {
         AppAsserts.notNull(userId, "用户ID不能为空！");
-        return Collections.emptyList() /*authorityMapper.getUserAuthorities(userId)*/;
+        return authorityMapper.getUserAuthorities(userId);
     }
 
     @Override
