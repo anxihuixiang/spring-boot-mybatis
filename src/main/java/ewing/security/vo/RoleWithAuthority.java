@@ -1,7 +1,7 @@
 package ewing.security.vo;
 
-import ewing.entity.Authority;
-import ewing.entity.Role;
+import ewing.query.entity.Authority;
+import ewing.query.entity.Role;
 
 import java.util.List;
 

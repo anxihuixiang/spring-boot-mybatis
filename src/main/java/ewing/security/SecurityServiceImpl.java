@@ -3,8 +3,8 @@ package ewing.security;
 import ewing.application.AppAsserts;
 import ewing.application.query.DataUtils;
 import ewing.application.query.Paging;
-import ewing.entity.*;
-import ewing.mapper.*;
+import ewing.query.dao.*;
+import ewing.query.entity.*;
 import ewing.security.vo.AuthorityNode;
 import ewing.security.vo.FindRoleParam;
 import ewing.security.vo.RoleWithAuthority;
@@ -28,15 +28,15 @@ import java.util.regex.Pattern;
 public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
     @Autowired
-    private AuthorityMapper authorityMapper;
+    private AuthorityDao authorityDao;
     @Autowired
-    private RoleAuthorityMapper roleAuthorityMapper;
+    private RoleAuthorityDao roleAuthorityDao;
     @Autowired
-    private RoleMapper roleMapper;
+    private RoleDao roleDao;
     @Autowired
-    private PermissionMapper permissionMapper;
+    private PermissionDao permissionDao;
 
     public static final Pattern CODE_PATTERN = Pattern.compile("[a-zA-Z]|([a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9])");
 
@@ -45,13 +45,13 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.hasText(username, "用户名不能为空！");
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(username);
-        List<User> users = userMapper.selectByExample(example);
+        List<User> users = userDao.selectByExample(example);
         return DataUtils.getMaxOneAndCopy(users, new SecurityUser());
     }
 
     @Override
     public List<Authority> getAllAuthority() {
-        return authorityMapper.selectByExample(new AuthorityExample());
+        return authorityDao.selectByExample(new AuthorityExample());
     }
 
     @Override
@@ -62,9 +62,9 @@ public class SecurityServiceImpl implements SecurityService {
                 "权限编码应由字母、数字和下划线组成，以字母开头、字母或数字结束！");
         AppAsserts.hasText(authority.getType(), "权限类型不能为空！");
 
-        /*AppAsserts.yes(authorityMapper.countWhere(qAuthority.name.eq(authority.getName())) < 1,
+        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.name.eq(authority.getName())) < 1,
                 "权限名称 " + authority.getName() + " 已存在！");
-        AppAsserts.yes(authorityMapper.countWhere(qAuthority.code.eq(authority.getCode())) < 1,
+        AppAsserts.yes(authorityDao.countWhere(qAuthority.code.eq(authority.getCode())) < 1,
                 "权限编码 " + authority.getCode() + " 已存在！");*/
 
         // 内容不允许为空串
@@ -73,7 +73,7 @@ public class SecurityServiceImpl implements SecurityService {
         }
         authority.setCode(authority.getCode().toUpperCase());
         authority.setCreateTime(new Date());
-        authorityMapper.insertSelective(authority);
+        authorityDao.insertSelective(authority);
     }
 
     @Override
@@ -85,10 +85,10 @@ public class SecurityServiceImpl implements SecurityService {
                 "权限编码应由字母、数字和下划线组成，以字母开头、字母或数字结束！");
         AppAsserts.hasText(authority.getType(), "权限类型不能为空！");
 
-        /*AppAsserts.yes(authorityMapper.countWhere(qAuthority.name.eq(authority.getName())
+        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.name.eq(authority.getName())
                         .and(qAuthority.authorityId.ne(authority.getAuthorityId()))) < 1,
                 "权限名称 " + authority.getName() + " 已存在！");
-        AppAsserts.yes(authorityMapper.countWhere(qAuthority.code.eq(authority.getCode())
+        AppAsserts.yes(authorityDao.countWhere(qAuthority.code.eq(authority.getCode())
                         .and(qAuthority.authorityId.ne(authority.getAuthorityId()))) < 1,
                 "权限编码 " + authority.getCode() + " 已存在！");*/
 
@@ -97,24 +97,24 @@ public class SecurityServiceImpl implements SecurityService {
             authority.setContent(null);
         }
         authority.setCode(authority.getCode().toUpperCase());
-        authorityMapper.updateByPrimaryKeySelective(authority);
+        authorityDao.updateByPrimaryKeySelective(authority);
     }
 
     @Override
     public void deleteAuthority(Long authorityId) {
         AppAsserts.notNull(authorityId, "权限ID不能为空！");
 
-        /*AppAsserts.yes(authorityMapper.countWhere(qAuthority.parentId.eq(authorityId)) < 1,
+        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.parentId.eq(authorityId)) < 1,
                 "请先删除所有子权限！");
-        AppAsserts.yes(roleAuthorityMapper.countWhere(qRoleAuthority.authorityId.eq(authorityId)) < 1,
+        AppAsserts.yes(roleAuthorityDao.countWhere(qRoleAuthority.authorityId.eq(authorityId)) < 1,
                 "该权限已有角色正在使用！");*/
 
-        authorityMapper.deleteByPrimaryKey(authorityId);
+        authorityDao.deleteByPrimaryKey(authorityId);
     }
 
     @Override
     public List<AuthorityNode> getAuthorityTree() {
-        return Collections.emptyList() /*TreeUtils.toTree(authorityMapper.selector()
+        return Collections.emptyList() /*TreeUtils.toTree(authorityDao.selector()
                 .want(Projections.bean(AuthorityNode.class, qAuthority.all()))
                 .fetch())*/;
     }
@@ -122,17 +122,17 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public List<AuthorityNode> getUserAuthorities(Long userId) {
         AppAsserts.notNull(userId, "用户ID不能为空！");
-        return authorityMapper.getUserAuthorities(userId);
+        return authorityDao.getUserAuthorities(userId);
     }
 
     @Override
     public List<Role> getAllRoles() {
-        return roleMapper.selectByExample(new RoleExample());
+        return roleDao.selectByExample(new RoleExample());
     }
 
     @Override
     public Paging<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam) {
-        return null /*roleMapper.findRoleWithAuthority(findRoleParam,
+        return null /*roleDao.findRoleWithAuthority(findRoleParam,
                 StringUtils.hasText(findRoleParam.getSearch()) ?
                         qRole.name.contains(findRoleParam.getSearch()) : null)*/;
     }
@@ -141,11 +141,11 @@ public class SecurityServiceImpl implements SecurityService {
     public void addRoleWithAuthority(RoleWithAuthority roleWithAuthority) {
         AppAsserts.notNull(roleWithAuthority, "角色对象不能为空。");
         AppAsserts.notNull(roleWithAuthority.getName(), "角色名不能为空。");
-        /*AppAsserts.yes(roleMapper.countWhere(qRole.name.eq(roleWithAuthority.getName())) < 1,
+        /*AppAsserts.yes(roleDao.countWhere(qRole.name.eq(roleWithAuthority.getName())) < 1,
                 "角色名已被使用。");*/
         // 使用自定义VO新增角色
         roleWithAuthority.setCreateTime(new Date());
-        roleMapper.insertSelective(roleWithAuthority);
+        roleDao.insertSelective(roleWithAuthority);
 
         // 批量建立新的角色权限关系
         addRoleAuthorities(roleWithAuthority);
@@ -157,15 +157,15 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(roleWithAuthority.getRoleId(), "角色ID不能为空。");
         AppAsserts.notNull(roleWithAuthority.getName(), "角色名不能为空。");
         // 名称存在并且不是自己
-        /*AppAsserts.yes(roleMapper.countWhere(qRole.name.eq(roleWithAuthority.getName())
+        /*AppAsserts.yes(roleDao.countWhere(qRole.name.eq(roleWithAuthority.getName())
                         .and(qRole.roleId.ne(roleWithAuthority.getRoleId()))) < 1,
                 "角色名已被使用。");*/
 
         // 使用自定义VO更新角色
-        roleMapper.updateByPrimaryKeySelective(roleWithAuthority);
+        roleDao.updateByPrimaryKeySelective(roleWithAuthority);
 
         // 清空角色权限关系
-        /*roleAuthorityMapper.deleteWhere(qRoleAuthority.roleId.eq(roleWithAuthority.getRoleId()));*/
+        /*roleAuthorityDao.deleteWhere(qRoleAuthority.roleId.eq(roleWithAuthority.getRoleId()));*/
 
         // 批量建立新的角色权限关系
         addRoleAuthorities(roleWithAuthority);
@@ -176,9 +176,9 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(roleId, "角色ID不能为空。");
 
         // 清空角色权限关系
-        /*roleAuthorityMapper.deleteWhere(qRoleAuthority.roleId.eq(roleId));*/
+        /*roleAuthorityDao.deleteWhere(qRoleAuthority.roleId.eq(roleId));*/
 
-        roleMapper.deleteByPrimaryKey(roleId);
+        roleDao.deleteByPrimaryKey(roleId);
     }
 
     private void addRoleAuthorities(RoleWithAuthority roleWithAuthority) {
@@ -193,7 +193,7 @@ public class SecurityServiceImpl implements SecurityService {
                 roleAuthority.setCreateTime(new Date());
                 roleAuthorities.add(roleAuthority);
             }
-            /*roleAuthorityMapper.insertBeans(roleAuthorities.toArray());*/
+            /*roleAuthorityDao.insertBeans(roleAuthorities.toArray());*/
         }
     }
 
@@ -203,7 +203,7 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(userId, "用户ID不能为空！");
         AppAsserts.hasText(action, "权限操作不能为空！");
         AppAsserts.hasText(targetId, "资源ID不能为空！");
-        return false /*permissionMapper.selector()
+        return false /*permissionDao.selector()
                 .where(qPermission.userId.eq(userId))
                 .where(qPermission.action.eq(action))
                 .where(qPermission.targetId.eq(targetId))

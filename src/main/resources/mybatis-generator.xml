@@ -27,17 +27,17 @@
         </javaTypeResolver>
 
         <!-- 数据表生成对应实体 -->
-        <javaModelGenerator targetPackage="ewing.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="ewing.query.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaModelGenerator>
 
         <!-- 生成Mapper文件 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="query.mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <!-- 生成Java的Mapper接口 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="ewing.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="ewing.query.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 

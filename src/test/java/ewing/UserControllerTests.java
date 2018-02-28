@@ -1,7 +1,7 @@
 package ewing;
 
 import ewing.application.common.GsonUtils;
-import ewing.entity.User;
+import ewing.query.entity.User;
 import ewing.user.UserService;
 import ewing.user.vo.UserWithRole;
 import org.junit.Before;

@@ -2,11 +2,11 @@ package ewing.user;
 
 import ewing.application.AppAsserts;
 import ewing.application.query.Paging;
-import ewing.entity.Role;
-import ewing.entity.User;
-import ewing.entity.UserRole;
-import ewing.mapper.UserMapper;
-import ewing.mapper.UserRoleMapper;
+import ewing.query.dao.UserDao;
+import ewing.query.dao.UserRoleDao;
+import ewing.query.entity.Role;
+import ewing.query.entity.User;
+import ewing.query.entity.UserRole;
 import ewing.user.vo.FindUserParam;
 import ewing.user.vo.UserWithRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserDao userDao;
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserRoleDao userRoleDao;
 
     @Override
     public Long addUserWithRole(UserWithRole userWithRole) {
@@ -38,12 +38,12 @@ public class UserServiceImpl implements UserService {
         AppAsserts.hasText(userWithRole.getNickname(), "昵称不能为空！");
         AppAsserts.hasText(userWithRole.getPassword(), "密码不能为空！");
         AppAsserts.hasText(userWithRole.getGender(), "性别不能为空！");
-        /*AppAsserts.yes(userMapper.countWhere(
+        /*AppAsserts.yes(userDao.countWhere(
                 qUser.username.eq(userWithRole.getUsername())) < 1,
                 "用户名已被使用！");*/
 
         userWithRole.setCreateTime(new Date());
-        userMapper.insertSelective(userWithRole);
+        userDao.insertSelective(userWithRole);
         addUserRoles(userWithRole);
         return userWithRole.getUserId();
     }
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 userRole.setCreateTime(new Date());
                 userRoles.add(userRole);
             }
-            /*userRoleMapper.insertBeans(userRoles.toArray());*/
+            /*userRoleDao.insertBeans(userRoles.toArray());*/
         }
     }
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(cacheNames = "UserCache", key = "#userId", unless = "#result==null")
     public User getUser(Long userId) {
         AppAsserts.notNull(userId, "用户ID不能为空！");
-        return userMapper.selectByPrimaryKey(userId);
+        return userDao.selectByPrimaryKey(userId);
     }
 
     @Override
@@ -77,11 +77,11 @@ public class UserServiceImpl implements UserService {
         AppAsserts.notNull(userWithRole.getUserId(), "用户ID不能为空！");
 
         // 更新用户的角色列表
-        /*userRoleMapper.deleteWhere(qUserRole.userId.eq(userWithRole.getUserId()));*/
+        /*userRoleDao.deleteWhere(qUserRole.userId.eq(userWithRole.getUserId()));*/
         addUserRoles(userWithRole);
 
         // 更新用户
-        /*SQLUpdateClause update = userMapper.updaterByKey(userWithRole.getUserId());
+        /*SQLUpdateClause update = userDao.updaterByKey(userWithRole.getUserId());
         if (StringUtils.hasText(userWithRole.getNickname())) {
             update.set(qUser.nickname, userWithRole.getNickname());
         }
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         // 昵称
         expression = expression.and(StringUtils.hasText(findUserParam.getNickname())
                 ? qUser.nickname.contains(findUserParam.getNickname()) : null);
-        return userMapper.findUserWithRole(findUserParam, expression);*/
+        return userDao.findUserWithRole(findUserParam, expression);*/
         return null;
     }
 
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(cacheNames = "UserCache", key = "#userId")
     public long deleteUser(Long userId) {
         AppAsserts.notNull(userId, "用户ID不能为空！");
-        return userMapper.deleteByPrimaryKey(userId);
+        return userDao.deleteByPrimaryKey(userId);
     }
 
 }

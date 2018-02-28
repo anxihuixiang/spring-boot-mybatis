@@ -2,8 +2,8 @@ package ewing.user;
 
 import ewing.application.ResultMessage;
 import ewing.application.query.Paging;
-import ewing.entity.Role;
-import ewing.entity.User;
+import ewing.query.entity.Role;
+import ewing.query.entity.User;
 import ewing.security.AuthorityCodes;
 import ewing.security.SecurityService;
 import ewing.user.vo.FindUserParam;

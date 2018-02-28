@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableCaching
 @EnableScheduling
-@MapperScan("ewing.mapper")
+@MapperScan("ewing.query.dao")
 @SpringBootApplication
 public class StartApp {
 
