@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.UserRoleDao">
-
+  <insert id="insertUserRoles" parameterType="List">
+    INSERT INTO user_role (role_id, user_id, create_time)
+    VALUES
+    <foreach collection="List" item="item" index="index" separator=",">
+      (#{item.roleId}, #{item.userId}, #{item.createTime})
+    </foreach>
+  </insert>
 </mapper>

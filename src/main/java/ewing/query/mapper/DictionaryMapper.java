@@ -2,8 +2,9 @@ package ewing.query.mapper;
 
 import ewing.query.entity.Dictionary;
 import ewing.query.entity.DictionaryExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DictionaryMapper {
     long countByExample(DictionaryExample example);

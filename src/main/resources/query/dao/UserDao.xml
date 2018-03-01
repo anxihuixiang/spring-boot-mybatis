@@ -1,5 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.UserDao">
+  <select id="countRole" resultType="java.lang.Long"
+          parameterType="ewing.user.vo.FindUserParam">
+    select count(*) from
+    `user` `user` where 1
+    <if test="username != null and username !=''">
+      and `user`.`username` like #{username}
+    </if>
+    <if test="nickname != null and nickname !=''">
+      and `user`.`nickname` like #{nickname}
+    </if>
+  </select>
 
+  <resultMap id="UserWithRole" type="ewing.security.vo.RoleWithAuthority">
+    <id column="user_id" jdbcType="BIGINT" property="userId"/>
+    <result column="username" jdbcType="VARCHAR" property="username"/>
+    <result column="password" jdbcType="VARCHAR" property="password"/>
+    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    <result column="gender" jdbcType="VARCHAR" property="gender"/>
+    <result column="birthday" jdbcType="DATE" property="birthday"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <!--用户下的角色（一对多）-->
+    <collection property="roles" ofType="ewing.query.entity.Role">
+      <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+      <result column="name" jdbcType="VARCHAR" property="name"/>
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </collection>
+  </resultMap>
+
+  <select id="findUserWithRole" resultMap="UserWithRole"
+          parameterType="ewing.user.vo.FindUserParam">
+    SELECT
+    `user`.`birthday`,
+    `user`.`create_time`,
+    `user`.`gender`,
+    `user`.`nickname`,
+    `user`.`password`,
+    `user`.`user_id`,
+    `user`.`username`,
+    `role`.`create_time`,
+    `role`.`name`,
+    `role`.`role_id`
+    FROM (
+    SELECT
+    `user`.`birthday`,
+    `user`.`create_time`,
+    `user`.`gender`,
+    `user`.`nickname`,
+    `user`.`password`,
+    `user`.`user_id`,
+    `user`.`username`
+    FROM
+    `user` `user`
+    WHERE 1
+    <if test="username != null and username !=''">
+      and `user`.`username` like #{username}
+    </if>
+    <if test="nickname != null and nickname !=''">
+      and `user`.`nickname` like #{nickname}
+    </if>
+    LIMIT #{limit} OFFSET #{offset}
+    ) AS `user`
+    LEFT JOIN `user_role` `user_role` ON `user`.`user_id` = `user_role`.`user_id`
+    LEFT JOIN `role` `role` ON `user_role`.`role_id` = `role`.`role_id`
+  </select>
 </mapper>

@@ -1,8 +1,9 @@
 package ewing.security;
 
 import ewing.application.AppAsserts;
-import ewing.application.query.QueryUtils;
+import ewing.application.common.TreeUtils;
 import ewing.application.query.Paging;
+import ewing.application.query.QueryUtils;
 import ewing.query.dao.*;
 import ewing.query.entity.*;
 import ewing.security.vo.AuthorityNode;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -62,10 +62,15 @@ public class SecurityServiceImpl implements SecurityService {
                 "权限编码应由字母、数字和下划线组成，以字母开头、字母或数字结束！");
         AppAsserts.hasText(authority.getType(), "权限类型不能为空！");
 
-        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.name.eq(authority.getName())) < 1,
+        AuthorityExample exampleName = new AuthorityExample();
+        exampleName.createCriteria().andNameEqualTo(authority.getName());
+        AppAsserts.yes(authorityDao.countByExample(exampleName) < 1,
                 "权限名称 " + authority.getName() + " 已存在！");
-        AppAsserts.yes(authorityDao.countWhere(qAuthority.code.eq(authority.getCode())) < 1,
-                "权限编码 " + authority.getCode() + " 已存在！");*/
+
+        AuthorityExample exampleCode = new AuthorityExample();
+        exampleCode.createCriteria().andCodeEqualTo(authority.getCode());
+        AppAsserts.yes(authorityDao.countByExample(exampleCode) < 1,
+                "权限编码 " + authority.getCode() + " 已存在！");
 
         // 内容不允许为空串
         if (!StringUtils.hasText(authority.getContent())) {
@@ -85,12 +90,17 @@ public class SecurityServiceImpl implements SecurityService {
                 "权限编码应由字母、数字和下划线组成，以字母开头、字母或数字结束！");
         AppAsserts.hasText(authority.getType(), "权限类型不能为空！");
 
-        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.name.eq(authority.getName())
-                        .and(qAuthority.authorityId.ne(authority.getAuthorityId()))) < 1,
+        AuthorityExample exampleName = new AuthorityExample();
+        exampleName.createCriteria().andNameEqualTo(authority.getName())
+                .andAuthorityIdNotEqualTo(authority.getAuthorityId());
+        AppAsserts.yes(authorityDao.countByExample(exampleName) < 1,
                 "权限名称 " + authority.getName() + " 已存在！");
-        AppAsserts.yes(authorityDao.countWhere(qAuthority.code.eq(authority.getCode())
-                        .and(qAuthority.authorityId.ne(authority.getAuthorityId()))) < 1,
-                "权限编码 " + authority.getCode() + " 已存在！");*/
+
+        AuthorityExample exampleCode = new AuthorityExample();
+        exampleCode.createCriteria().andCodeEqualTo(authority.getCode())
+                .andAuthorityIdNotEqualTo(authority.getAuthorityId());
+        AppAsserts.yes(authorityDao.countByExample(exampleCode) < 1,
+                "权限编码 " + authority.getCode() + " 已存在！");
 
         // 内容不允许为空串
         if (!StringUtils.hasText(authority.getContent())) {
@@ -104,19 +114,22 @@ public class SecurityServiceImpl implements SecurityService {
     public void deleteAuthority(Long authorityId) {
         AppAsserts.notNull(authorityId, "权限ID不能为空！");
 
-        /*AppAsserts.yes(authorityDao.countWhere(qAuthority.parentId.eq(authorityId)) < 1,
+        AuthorityExample authorityExample = new AuthorityExample();
+        authorityExample.createCriteria().andParentIdEqualTo(authorityId);
+        AppAsserts.yes(authorityDao.countByExample(authorityExample) < 1,
                 "请先删除所有子权限！");
-        AppAsserts.yes(roleAuthorityDao.countWhere(qRoleAuthority.authorityId.eq(authorityId)) < 1,
-                "该权限已有角色正在使用！");*/
+
+        RoleAuthorityExample roleAuthorityExample = new RoleAuthorityExample();
+        roleAuthorityExample.createCriteria().andAuthorityIdEqualTo(authorityId);
+        AppAsserts.yes(roleAuthorityDao.countByExample(roleAuthorityExample) < 1,
+                "该权限已有角色正在使用！");
 
         authorityDao.deleteByPrimaryKey(authorityId);
     }
 
     @Override
     public List<AuthorityNode> getAuthorityTree() {
-        return Collections.emptyList() /*TreeUtils.toTree(authorityDao.selector()
-                .want(Projections.bean(AuthorityNode.class, qAuthority.all()))
-                .fetch())*/;
+        return TreeUtils.toTree(authorityDao.getAuthorityNodes());
     }
 
     @Override
@@ -132,17 +145,21 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Paging<RoleWithAuthority> findRoleWithAuthority(FindRoleParam findRoleParam) {
-        return null /*roleDao.findRoleWithAuthority(findRoleParam,
-                StringUtils.hasText(findRoleParam.getSearch()) ?
-                        qRole.name.contains(findRoleParam.getSearch()) : null)*/;
+        findRoleParam.setSearch(QueryUtils.likeContains(findRoleParam.getSearch()));
+        return new Paging<>(roleDao.countRole(findRoleParam),
+                roleDao.findRoleWithAuthority(findRoleParam));
     }
 
     @Override
     public void addRoleWithAuthority(RoleWithAuthority roleWithAuthority) {
         AppAsserts.notNull(roleWithAuthority, "角色对象不能为空。");
         AppAsserts.notNull(roleWithAuthority.getName(), "角色名不能为空。");
-        /*AppAsserts.yes(roleDao.countWhere(qRole.name.eq(roleWithAuthority.getName())) < 1,
-                "角色名已被使用。");*/
+
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andNameEqualTo(roleWithAuthority.getName());
+        AppAsserts.yes(roleDao.countByExample(roleExample) < 1,
+                "角色名已被使用。");
+
         // 使用自定义VO新增角色
         roleWithAuthority.setCreateTime(new Date());
         roleDao.insertSelective(roleWithAuthority);
@@ -156,16 +173,21 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(roleWithAuthority, "角色对象不能为空。");
         AppAsserts.notNull(roleWithAuthority.getRoleId(), "角色ID不能为空。");
         AppAsserts.notNull(roleWithAuthority.getName(), "角色名不能为空。");
+
         // 名称存在并且不是自己
-        /*AppAsserts.yes(roleDao.countWhere(qRole.name.eq(roleWithAuthority.getName())
-                        .and(qRole.roleId.ne(roleWithAuthority.getRoleId()))) < 1,
-                "角色名已被使用。");*/
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andNameEqualTo(roleWithAuthority.getName())
+                .andRoleIdNotEqualTo(roleWithAuthority.getRoleId());
+        AppAsserts.yes(roleDao.countByExample(roleExample) < 1,
+                "角色名已被使用。");
 
         // 使用自定义VO更新角色
         roleDao.updateByPrimaryKeySelective(roleWithAuthority);
 
         // 清空角色权限关系
-        /*roleAuthorityDao.deleteWhere(qRoleAuthority.roleId.eq(roleWithAuthority.getRoleId()));*/
+        RoleAuthorityExample roleAuthorityExample = new RoleAuthorityExample();
+        roleAuthorityExample.createCriteria().andRoleIdNotEqualTo(roleWithAuthority.getRoleId());
+        roleAuthorityDao.deleteByExample(roleAuthorityExample);
 
         // 批量建立新的角色权限关系
         addRoleAuthorities(roleWithAuthority);
@@ -176,7 +198,9 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(roleId, "角色ID不能为空。");
 
         // 清空角色权限关系
-        /*roleAuthorityDao.deleteWhere(qRoleAuthority.roleId.eq(roleId));*/
+        RoleAuthorityExample roleAuthorityExample = new RoleAuthorityExample();
+        roleAuthorityExample.createCriteria().andRoleIdNotEqualTo(roleId);
+        roleAuthorityDao.deleteByExample(roleAuthorityExample);
 
         roleDao.deleteByPrimaryKey(roleId);
     }
@@ -193,7 +217,7 @@ public class SecurityServiceImpl implements SecurityService {
                 roleAuthority.setCreateTime(new Date());
                 roleAuthorities.add(roleAuthority);
             }
-            /*roleAuthorityDao.insertBeans(roleAuthorities.toArray());*/
+            roleAuthorityDao.insertRoleAuthorities(roleAuthorities);
         }
     }
 
@@ -203,12 +227,15 @@ public class SecurityServiceImpl implements SecurityService {
         AppAsserts.notNull(userId, "用户ID不能为空！");
         AppAsserts.hasText(action, "权限操作不能为空！");
         AppAsserts.hasText(targetId, "资源ID不能为空！");
-        return false /*permissionDao.selector()
-                .where(qPermission.userId.eq(userId))
-                .where(qPermission.action.eq(action))
-                .where(qPermission.targetId.eq(targetId))
-                .where(StringUtils.hasText(targetType) ? qPermission.targetType.eq(targetType) : null)
-                .fetchCount() > 0*/;
+        PermissionExample permissionExample = new PermissionExample();
+        PermissionExample.Criteria criteria = permissionExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andActionEqualTo(action)
+                .andTargetIdEqualTo(targetId);
+        if (StringUtils.hasText(targetType)) {
+            criteria.andTargetTypeEqualTo(targetType);
+        }
+        return permissionDao.countByExample(permissionExample) > 0;
     }
 
 }

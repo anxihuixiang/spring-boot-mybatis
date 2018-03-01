@@ -9,4 +9,6 @@ public interface AuthorityDao extends AuthorityMapper {
 
     List<AuthorityNode> getUserAuthorities(Long userId);
 
+    List<AuthorityNode> getAuthorityNodes();
+
 }

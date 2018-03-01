@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.RoleDao">
 
+  <select id="countRole" resultType="java.lang.Long"
+          parameterType="ewing.security.vo.FindRoleParam">
+    select count(*)
+    from `role` `role`
+    <if test="search != null and search !=''">
+      where `role`.`name` like #{search}
+    </if>
+  </select>
+
+  <resultMap id="RoleWithAuthority" type="ewing.user.vo.UserWithRole">
+    <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <!--角色下的权限（一对多）-->
+    <collection property="authorities" ofType="ewing.query.entity.Authority">
+      <id column="authority_id" jdbcType="BIGINT" property="authorityId"/>
+      <result column="name" jdbcType="VARCHAR" property="name"/>
+      <result column="code" jdbcType="VARCHAR" property="code"/>
+      <result column="type" jdbcType="VARCHAR" property="type"/>
+      <result column="content" jdbcType="VARCHAR" property="content"/>
+      <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </collection>
+  </resultMap>
+
+  <select id="findRoleWithAuthority" resultMap="RoleWithAuthority"
+          parameterType="ewing.security.vo.FindRoleParam">
+    SELECT
+    `role`.`create_time`,
+    `role`.`name`,
+    `role`.`role_id`,
+    `authority`.`authority_id`,
+    `authority`.`code`,
+    `authority`.`content`,
+    `authority`.`create_time`,
+    `authority`.`name`,
+    `authority`.`parent_id`,
+    `authority`.`type`
+    FROM
+    (SELECT
+    `role`.`create_time`,
+    `role`.`name`,
+    `role`.`role_id`
+    FROM
+    `role` `role`
+    <if test="search != null and search !=''">
+      where `role`.`name` like #{search}
+    </if>
+    LIMIT #{limit} OFFSET #{offset}
+    ) AS `role`
+    LEFT JOIN `role_authority` `role_authority` ON `role`.`role_id` = `role_authority`.`role_id`
+    LEFT JOIN `authority` `authority` ON `role_authority`.`authority_id` = `authority`.`authority_id`
+  </select>
 </mapper>

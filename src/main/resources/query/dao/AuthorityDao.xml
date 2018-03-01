@@ -4,11 +4,30 @@
 <mapper namespace="ewing.query.dao.AuthorityDao">
   <select id="getUserAuthorities" parameterType="java.lang.Long"
           resultType="ewing.security.vo.AuthorityNode">
-    select a.authority_id, a.name, a.code, a.type, a.content, a.parent_id
-    from authority a
-    join role_authority ra on a.authority_id = ra.authority_id
-    join role r on r.role_id = ra.role_id
-    join user_role ur on r.role_id = ur.role_id
-    where ur.user_id = #{userId,jdbcType=BIGINT}
+    SELECT
+      a.authority_id,
+      a.name,
+      a.code,
+      a.type,
+      a.content,
+      a.parent_id
+    FROM authority a
+      JOIN role_authority ra ON a.authority_id = ra.authority_id
+      JOIN role r ON r.role_id = ra.role_id
+      JOIN user_role ur ON r.role_id = ur.role_id
+    WHERE ur.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <select id="getAuthorityNodes" resultType="ewing.security.vo.AuthorityNode">
+    SELECT
+      `authority`.`authority_id`,
+      `authority`.`code`,
+      `authority`.`content`,
+      `authority`.`create_time`,
+      `authority`.`name`,
+      `authority`.`parent_id`,
+      `authority`.`type`
+    FROM
+      `authority` `authority`
   </select>
 </mapper>

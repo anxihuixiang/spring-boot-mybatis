@@ -2,8 +2,9 @@ package ewing.query.mapper;
 
 import ewing.query.entity.UserRole;
 import ewing.query.entity.UserRoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserRoleMapper {
     long countByExample(UserRoleExample example);

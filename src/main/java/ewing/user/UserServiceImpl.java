@@ -2,11 +2,10 @@ package ewing.user;
 
 import ewing.application.AppAsserts;
 import ewing.application.query.Paging;
+import ewing.application.query.QueryUtils;
 import ewing.query.dao.UserDao;
 import ewing.query.dao.UserRoleDao;
-import ewing.query.entity.Role;
-import ewing.query.entity.User;
-import ewing.query.entity.UserRole;
+import ewing.query.entity.*;
 import ewing.user.vo.FindUserParam;
 import ewing.user.vo.UserWithRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,9 +38,11 @@ public class UserServiceImpl implements UserService {
         AppAsserts.hasText(userWithRole.getNickname(), "昵称不能为空！");
         AppAsserts.hasText(userWithRole.getPassword(), "密码不能为空！");
         AppAsserts.hasText(userWithRole.getGender(), "性别不能为空！");
-        /*AppAsserts.yes(userDao.countWhere(
-                qUser.username.eq(userWithRole.getUsername())) < 1,
-                "用户名已被使用！");*/
+
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(userWithRole.getUsername());
+        AppAsserts.yes(userDao.countByExample(userExample) < 1,
+                "用户名已被使用！");
 
         userWithRole.setCreateTime(new Date());
         userDao.insertSelective(userWithRole);
@@ -59,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 userRole.setCreateTime(new Date());
                 userRoles.add(userRole);
             }
-            /*userRoleDao.insertBeans(userRoles.toArray());*/
+            userRoleDao.insertUserRoles(userRoles);
         }
     }
 
@@ -77,38 +79,35 @@ public class UserServiceImpl implements UserService {
         AppAsserts.notNull(userWithRole.getUserId(), "用户ID不能为空！");
 
         // 更新用户的角色列表
-        /*userRoleDao.deleteWhere(qUserRole.userId.eq(userWithRole.getUserId()));*/
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(userWithRole.getUserId());
+        userRoleDao.deleteByExample(userRoleExample);
         addUserRoles(userWithRole);
 
         // 更新用户
-        /*SQLUpdateClause update = userDao.updaterByKey(userWithRole.getUserId());
+        User userUpdate = new User();
+        userUpdate.setUserId(userWithRole.getUserId());
         if (StringUtils.hasText(userWithRole.getNickname())) {
-            update.set(qUser.nickname, userWithRole.getNickname());
+            userUpdate.setNickname(userWithRole.getNickname());
         }
         if (StringUtils.hasText(userWithRole.getPassword())) {
-            update.set(qUser.password, userWithRole.getPassword());
+            userUpdate.setPassword(userWithRole.getPassword());
         }
         if (StringUtils.hasText(userWithRole.getGender())) {
-            update.set(qUser.gender, userWithRole.getGender());
+            userUpdate.setGender(userWithRole.getGender());
         }
         if (userWithRole.getBirthday() != null) {
-            update.set(qUser.birthday, userWithRole.getBirthday());
+            userUpdate.setBirthday(userWithRole.getBirthday());
         }
-        return update.execute();*/
-        return 0L;
+        return userDao.updateByPrimaryKeySelective(userUpdate);
     }
 
     @Override
     public Paging<UserWithRole> findUserWithRole(FindUserParam findUserParam) {
-        /*BooleanExpression expression = Expressions.TRUE;
-        // 用户名
-        expression = expression.and(StringUtils.hasText(findUserParam.getUsername())
-                ? qUser.username.contains(findUserParam.getUsername()) : null);
-        // 昵称
-        expression = expression.and(StringUtils.hasText(findUserParam.getNickname())
-                ? qUser.nickname.contains(findUserParam.getNickname()) : null);
-        return userDao.findUserWithRole(findUserParam, expression);*/
-        return null;
+        findUserParam.setUsername(QueryUtils.likeContains(findUserParam.getUsername()));
+        findUserParam.setNickname(QueryUtils.likeContains(findUserParam.getNickname()));
+        return new Paging<>(userDao.countUser(findUserParam),
+                userDao.findUserWithRole(findUserParam));
     }
 
     @Override

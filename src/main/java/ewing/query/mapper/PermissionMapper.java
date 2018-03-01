@@ -2,8 +2,9 @@ package ewing.query.mapper;
 
 import ewing.query.entity.Permission;
 import ewing.query.entity.PermissionExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PermissionMapper {
     long countByExample(PermissionExample example);
