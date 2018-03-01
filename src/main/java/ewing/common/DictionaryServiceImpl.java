@@ -7,7 +7,7 @@ import ewing.application.query.Paging;
 import ewing.application.query.QueryUtils;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
-import ewing.query.dao.DictionaryDao;
+import ewing.common.dao.DictionaryDao;
 import ewing.query.entity.Dictionary;
 import ewing.query.entity.DictionaryExample;
 import org.springframework.beans.factory.annotation.Autowired;

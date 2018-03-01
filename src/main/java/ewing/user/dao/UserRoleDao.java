@@ -1,4 +1,4 @@
-package ewing.query.dao;
+package ewing.user.dao;
 
 import ewing.query.entity.UserRole;
 import ewing.query.mapper.UserRoleMapper;

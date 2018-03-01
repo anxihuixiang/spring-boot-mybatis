@@ -1,4 +1,4 @@
-package ewing.query.dao;
+package ewing.security.dao;
 
 import ewing.query.entity.RoleAuthority;
 import ewing.query.mapper.RoleAuthorityMapper;

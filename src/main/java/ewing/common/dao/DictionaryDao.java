@@ -1,4 +1,4 @@
-package ewing.query.dao;
+package ewing.common.dao;
 
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;

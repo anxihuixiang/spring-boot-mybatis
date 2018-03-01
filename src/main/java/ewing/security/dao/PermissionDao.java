@@ -1,4 +1,4 @@
-package ewing.query.dao;
+package ewing.security.dao;
 
 import ewing.query.mapper.PermissionMapper;
 

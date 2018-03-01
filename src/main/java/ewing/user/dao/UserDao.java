@@ -1,4 +1,4 @@
-package ewing.query.dao;
+package ewing.user.dao;
 
 import ewing.query.mapper.UserMapper;
 import ewing.user.vo.FindUserParam;
