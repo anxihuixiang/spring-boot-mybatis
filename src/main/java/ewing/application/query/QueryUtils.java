@@ -4,9 +4,9 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.Collection;
 
-public class DataUtils {
+public class QueryUtils {
 
-    private DataUtils() {
+    private QueryUtils() {
     }
 
     /**
@@ -61,6 +61,42 @@ public class DataUtils {
             return target;
         }
         return copyProperties(one, target);
+    }
+
+    /**
+     * 模糊查询包含转义后的输入字符串。
+     */
+    public static String likeContains(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        } else {
+            return "%" + input.replace("%", "\\%")
+                    .replace("_", "\\_") + "%";
+        }
+    }
+
+    /**
+     * 模糊查询以转义后的输入字符串开始。
+     */
+    public static String likeStartWith(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        } else {
+            return input.replace("%", "\\%")
+                    .replace("_", "\\_") + "%";
+        }
+    }
+
+    /**
+     * 模糊查询以转义后的输入字符串结束。
+     */
+    public static String likeEndWith(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        } else {
+            return "%" + input.replace("%", "\\%")
+                    .replace("_", "\\_");
+        }
     }
 
 }

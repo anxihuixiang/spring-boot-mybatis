@@ -33,12 +33,12 @@
     WHERE
     `dictionary`.`root_id` IS NULL
     <if test="name != null and name !=''">
-      AND (`dictionary`.`name` LIKE concat('%',#{name},'%')
-      OR `sub`.`name` LIKE  concat('%',#{name},'%'))
+      AND (`dictionary`.`name` LIKE #{name}
+      OR `sub`.`name` LIKE #{name})
     </if>
     <if test="value != null and value !=''">
-      AND (`dictionary`.`value` LIKE concat('%',#{value},'%')
-      OR `sub`.`value` LIKE concat('%',#{value},'%'))
+      AND (`dictionary`.`value` LIKE #{value}
+      OR `sub`.`value` LIKE #{value})
     </if>
     ) internal
   </select>
@@ -67,12 +67,12 @@
     WHERE
     `dictionary`.`root_id` IS NULL
     <if test="name != null and name !=''">
-      AND (`dictionary`.`name` LIKE concat('%',#{name},'%')
-      OR `sub`.`name` LIKE  concat('%',#{name},'%'))
+      AND (`dictionary`.`name` LIKE #{name}
+      OR `sub`.`name` LIKE #{name})
     </if>
     <if test="value != null and value !=''">
-      AND (`dictionary`.`value` LIKE concat('%',#{value},'%')
-      OR `sub`.`value` LIKE concat('%',#{value},'%'))
+      AND (`dictionary`.`value` LIKE #{value}
+      OR `sub`.`value` LIKE #{value})
     </if>
     LIMIT #{limit} OFFSET #{offset}
     ) AS `dictionary`

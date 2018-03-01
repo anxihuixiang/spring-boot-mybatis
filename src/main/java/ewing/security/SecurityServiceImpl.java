@@ -1,7 +1,7 @@
 package ewing.security;
 
 import ewing.application.AppAsserts;
-import ewing.application.query.DataUtils;
+import ewing.application.query.QueryUtils;
 import ewing.application.query.Paging;
 import ewing.query.dao.*;
 import ewing.query.entity.*;
@@ -46,7 +46,7 @@ public class SecurityServiceImpl implements SecurityService {
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<User> users = userDao.selectByExample(example);
-        return DataUtils.getMaxOneAndCopy(users, new SecurityUser());
+        return QueryUtils.getMaxOneAndCopy(users, new SecurityUser());
     }
 
     @Override

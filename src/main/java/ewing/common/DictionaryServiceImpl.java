@@ -3,7 +3,7 @@ package ewing.common;
 import ewing.application.AppAsserts;
 import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
-import ewing.application.query.DataUtils;
+import ewing.application.query.QueryUtils;
 import ewing.application.query.Paging;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
@@ -32,6 +32,8 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Paging<Dictionary> findWithSubDictionary(
             FindDictionaryParam findDictionaryParam) {
         AppAsserts.notNull(findDictionaryParam, "查询参数不能为空！");
+        findDictionaryParam.setName(QueryUtils.likeContains(findDictionaryParam.getName()));
+        findDictionaryParam.setValue(QueryUtils.likeContains(findDictionaryParam.getValue()));
         long total = dictionaryDao.countDictionary(findDictionaryParam);
         List<Dictionary> dictionaries = dictionaryDao.findWithSubDictionary(findDictionaryParam);
         return new Paging<>(total, dictionaries);
@@ -47,7 +49,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (dictionary.getParentId() != null) {
             DictionaryExample example = new DictionaryExample();
             example.createCriteria().andParentIdEqualTo(dictionary.getParentId());
-            Dictionary parent = DataUtils.getMaxOne(dictionaryDao.selectByExample(example));
+            Dictionary parent = QueryUtils.getMaxOne(dictionaryDao.selectByExample(example));
             if (parent == null) {
                 throw new AppRunException("父字典项不存在！");
             } else {
