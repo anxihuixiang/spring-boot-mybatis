@@ -72,11 +72,11 @@ CREATE TABLE `dictionary` (
 -- ----------------------------
 -- Records of dictionary
 -- ----------------------------
-INSERT INTO `dictionary` VALUES ('1', '性别', 'GENDER', '性别是公用字典', null, null, '2018-01-22 21:48:38');
+INSERT INTO `dictionary` VALUES ('1', '性别', 'GENDER', '性别是公用字典', null, '1', '2018-01-22 21:48:38');
 INSERT INTO `dictionary` VALUES ('2', '保密', 'SECRET', '保密或未知', '1', '1', '2018-01-22 22:53:21');
 INSERT INTO `dictionary` VALUES ('3', '男', 'MALE', '男孩、男士、雄性', '1', '1', '2018-01-22 22:53:35');
 INSERT INTO `dictionary` VALUES ('4', '女', 'FEMALE', '女孩、女士、雌性', '1', '1', '2018-01-22 22:53:45');
-INSERT INTO `dictionary` VALUES ('5', '权限类型', 'AUTHORITY_TYPE', '权限的类型', null, null, '2018-01-22 22:54:26');
+INSERT INTO `dictionary` VALUES ('5', '权限类型', 'AUTHORITY_TYPE', '权限的类型', null, '5', '2018-01-22 22:54:26');
 INSERT INTO `dictionary` VALUES ('6', '菜单', 'MENU', '一级菜单项及相关接口权限', '5', '5', '2018-01-22 22:54:55');
 INSERT INTO `dictionary` VALUES ('7', '页面', 'PAGE', '页面菜单项及相关接口权限', '5', '5', '2018-01-22 22:55:28');
 INSERT INTO `dictionary` VALUES ('8', '操作', 'ACTION', '操作及相关接口权限', '5', '5', '2018-01-22 22:55:40');

@@ -29,29 +29,27 @@
     `dictionary`.`value`
     FROM
     `dictionary` `dictionary`
-    LEFT JOIN `dictionary` `sub` ON `dictionary`.`dictionary_id` = `sub`.`root_id`
+    LEFT JOIN `dictionary` `all` ON `dictionary`.`dictionary_id` = `all`.`root_id`
     WHERE
-    `dictionary`.`root_id` IS NULL
+    `dictionary`.`dictionary_id` = `dictionary`.`root_id`
     <if test="name != null and name !=''">
-      AND (`dictionary`.`name` LIKE #{name}
-      OR `sub`.`name` LIKE #{name})
+      AND `all`.`name` LIKE #{name}
     </if>
     <if test="value != null and value !=''">
-      AND (`dictionary`.`value` LIKE #{value}
-      OR `sub`.`value` LIKE #{value})
+      AND `all`.`value` LIKE #{value}
     </if>
     ) internal
   </select>
 
   <select id="findWithSubDictionary" resultType="ewing.query.entity.Dictionary" parameterType="ewing.common.vo.FindDictionaryParam">
     SELECT DISTINCT
-    `sub`.`create_time`,
-    `sub`.`detail`,
-    `sub`.`dictionary_id`,
-    `sub`.`name`,
-    `sub`.`parent_id`,
-    `sub`.`root_id`,
-    `sub`.`value`
+    `all`.`create_time`,
+    `all`.`detail`,
+    `all`.`dictionary_id`,
+    `all`.`name`,
+    `all`.`parent_id`,
+    `all`.`root_id`,
+    `all`.`value`
     FROM (
     SELECT DISTINCT
     `dictionary`.`create_time`,
@@ -63,21 +61,19 @@
     `dictionary`.`value`
     FROM
     `dictionary` `dictionary`
-    LEFT JOIN `dictionary` `sub` ON `dictionary`.`dictionary_id` = `sub`.`root_id`
+    LEFT JOIN `dictionary` `all` ON `dictionary`.`dictionary_id` = `all`.`root_id`
     WHERE
-    `dictionary`.`root_id` IS NULL
+    `dictionary`.`dictionary_id` = `dictionary`.`root_id`
     <if test="name != null and name !=''">
-      AND (`dictionary`.`name` LIKE #{name}
-      OR `sub`.`name` LIKE #{name})
+      AND `all`.`name` LIKE #{name}
     </if>
     <if test="value != null and value !=''">
-      AND (`dictionary`.`value` LIKE #{value}
-      OR `sub`.`value` LIKE #{value})
+      AND `all`.`value` LIKE #{value}
     </if>
     LIMIT #{limit} OFFSET #{offset}
     ) AS `dictionary`
-    LEFT JOIN `dictionary` `sub`
-    ON `dictionary`.`dictionary_id` = `sub`.`dictionary_id`
-    OR `dictionary`.`dictionary_id` = `sub`.`root_id`
+    LEFT JOIN `dictionary` `all`
+    ON `dictionary`.`dictionary_id` = `all`.`dictionary_id`
+    OR `dictionary`.`dictionary_id` = `all`.`root_id`
   </select>
 </mapper>

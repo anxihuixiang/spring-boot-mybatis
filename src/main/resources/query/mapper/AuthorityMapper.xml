@@ -102,19 +102,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="ewing.query.entity.Authority">
-    insert into authority (authority_id, name, code, 
-      type, content, parent_id, 
-      create_time)
-    values (#{authorityId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{type,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
-      #{createTime,jdbcType=TIMESTAMP})
+    <selectKey keyProperty="authorityId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into authority (name, code, type, 
+      content, parent_id, create_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="ewing.query.entity.Authority">
+    <selectKey keyProperty="authorityId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into authority
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="authorityId != null">
-        authority_id,
-      </if>
       <if test="name != null">
         name,
       </if>
@@ -135,9 +138,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="authorityId != null">
-        #{authorityId,jdbcType=BIGINT},
-      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>

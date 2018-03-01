@@ -3,8 +3,8 @@ package ewing.common;
 import ewing.application.AppAsserts;
 import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
-import ewing.application.query.QueryUtils;
 import ewing.application.query.Paging;
+import ewing.application.query.QueryUtils;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.query.dao.DictionaryDao;
@@ -54,11 +54,8 @@ public class DictionaryServiceImpl implements DictionaryService {
                 throw new AppRunException("父字典项不存在！");
             } else {
                 // 父字典存在则根字典继承自父字典
-                dictionary.setRootId(parent.getRootId() == null ?
-                        parent.getDictionaryId() : parent.getRootId());
+                dictionary.setRootId(parent.getRootId());
             }
-        } else {
-            dictionary.setRootId(null);
         }
 
         // 相同位置下的字典名称或值不能重复
@@ -72,6 +69,12 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         dictionary.setCreateTime(new Date());
         dictionaryDao.insertSelective(dictionary);
+
+        // 更新字典值的根字典ID
+        if (dictionary.getParentId() == null) {
+            dictionary.setRootId(dictionary.getDictionaryId());
+            dictionaryDao.updateByPrimaryKeySelective(dictionary);
+        }
     }
 
     @Override

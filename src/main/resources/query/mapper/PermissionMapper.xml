@@ -101,19 +101,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="ewing.query.entity.Permission">
-    insert into permission (permission_id, user_id, action, 
-      target_type, target_id, create_time
-      )
-    values (#{permissionId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{action,jdbcType=VARCHAR}, 
-      #{targetType,jdbcType=VARCHAR}, #{targetId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
+    <selectKey keyProperty="permissionId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into permission (user_id, action, target_type, 
+      target_id, create_time)
+    values (#{userId,jdbcType=BIGINT}, #{action,jdbcType=VARCHAR}, #{targetType,jdbcType=VARCHAR}, 
+      #{targetId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="ewing.query.entity.Permission">
+    <selectKey keyProperty="permissionId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into permission
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="permissionId != null">
-        permission_id,
-      </if>
       <if test="userId != null">
         user_id,
       </if>
@@ -131,9 +132,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="permissionId != null">
-        #{permissionId,jdbcType=BIGINT},
-      </if>
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>

@@ -1,49 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 
-    <!-- 相关依赖已在Maven插件配置中引入，此处不需要Jar包依赖 -->
+  <!-- 相关依赖已在Maven插件配置中引入，此处不需要Jar包依赖 -->
 
-    <context id="ewing.mybatis" targetRuntime="MyBatis3" defaultModelType="flat">
+  <context id="ewing.mybatis" targetRuntime="MyBatis3" defaultModelType="flat">
 
-        <!-- 屏蔽注释的生成 -->
-        <commentGenerator>
-            <property name="suppressAllComments" value="true"/>
-            <property name="suppressDate" value="true"/>
-        </commentGenerator>
+    <!-- 屏蔽注释的生成 -->
+    <commentGenerator>
+      <property name="suppressAllComments" value="true"/>
+      <property name="suppressDate" value="true"/>
+    </commentGenerator>
 
-        <!-- 配置数据库连接 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/mybatis?useUnicode=true"
-                        userId="mybatis"
-                        password="mybatis">
-        </jdbcConnection>
+    <!-- 配置数据库连接 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                    connectionURL="jdbc:mysql://localhost:3306/mybatis?useUnicode=true"
+                    userId="mybatis"
+                    password="mybatis">
+    </jdbcConnection>
 
-        <!-- Java类型处理器 -->
-        <javaTypeResolver>
-            <property name="forceBigDecimals" value="false"/>
-        </javaTypeResolver>
+    <!-- Java类型处理器 -->
+    <javaTypeResolver>
+      <property name="forceBigDecimals" value="false"/>
+    </javaTypeResolver>
 
-        <!-- 数据表生成对应实体 -->
-        <javaModelGenerator targetPackage="ewing.query.entity" targetProject="src/main/java">
-            <property name="enableSubPackages" value="true"/>
-        </javaModelGenerator>
+    <!-- 数据表生成对应实体 -->
+    <javaModelGenerator targetPackage="ewing.query.entity" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true"/>
+    </javaModelGenerator>
 
-        <!-- 生成Mapper文件 -->
-        <sqlMapGenerator targetPackage="query.mapper" targetProject="src/main/resources">
-            <property name="enableSubPackages" value="true"/>
-        </sqlMapGenerator>
+    <!-- 生成Mapper文件 -->
+    <sqlMapGenerator targetPackage="query.mapper" targetProject="src/main/resources">
+      <property name="enableSubPackages" value="true"/>
+    </sqlMapGenerator>
 
-        <!-- 生成Java的Mapper接口 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="ewing.query.mapper" targetProject="src/main/java">
-            <property name="enableSubPackages" value="true"/>
-        </javaClientGenerator>
+    <!-- 生成Java的Mapper接口 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="ewing.query.mapper" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true"/>
+    </javaClientGenerator>
 
-        <!-- 配置需要生成的表，可用%表示通配表名进行批量生成
-          enable*Example可配置是否生成模板方法（默认生成） -->
-        <table tableName="%"/>
+    <!-- 配置需要生成的表，可用%表示通配表名进行批量生成 enable*Example可配置是否生成模板方法（默认生成） -->
 
-    </context>
+    <table tableName="authority">
+      <generatedKey column="authority_id" sqlStatement="MySql" identity="true"/>
+    </table>
+
+    <table tableName="user">
+      <generatedKey column="user_id" sqlStatement="MySql" identity="true"/>
+    </table>
+
+    <table tableName="dictionary">
+      <generatedKey column="dictionary_id" sqlStatement="MySql" identity="true"/>
+    </table>
+
+    <table tableName="permission">
+      <generatedKey column="permission_id" sqlStatement="MySql" identity="true"/>
+    </table>
+
+    <table tableName="role">
+      <generatedKey column="role_id" sqlStatement="MySql" identity="true"/>
+    </table>
+
+    <table tableName="role_authority"/>
+
+    <table tableName="user_role"/>
+
+  </context>
 </generatorConfiguration>
