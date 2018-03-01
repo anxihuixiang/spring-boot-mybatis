@@ -186,7 +186,7 @@ public class SecurityServiceImpl implements SecurityService {
 
         // 清空角色权限关系
         RoleAuthorityExample roleAuthorityExample = new RoleAuthorityExample();
-        roleAuthorityExample.createCriteria().andRoleIdNotEqualTo(roleWithAuthority.getRoleId());
+        roleAuthorityExample.createCriteria().andRoleIdEqualTo(roleWithAuthority.getRoleId());
         roleAuthorityDao.deleteByExample(roleAuthorityExample);
 
         // 批量建立新的角色权限关系
@@ -199,7 +199,7 @@ public class SecurityServiceImpl implements SecurityService {
 
         // 清空角色权限关系
         RoleAuthorityExample roleAuthorityExample = new RoleAuthorityExample();
-        roleAuthorityExample.createCriteria().andRoleIdNotEqualTo(roleId);
+        roleAuthorityExample.createCriteria().andRoleIdEqualTo(roleId);
         roleAuthorityDao.deleteByExample(roleAuthorityExample);
 
         roleDao.deleteByPrimaryKey(roleId);

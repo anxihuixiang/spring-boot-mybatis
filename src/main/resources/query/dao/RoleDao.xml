@@ -12,19 +12,19 @@
     </if>
   </select>
 
-  <resultMap id="RoleWithAuthority" type="ewing.user.vo.UserWithRole">
+  <resultMap id="RoleWithAuthority" type="ewing.security.vo.RoleWithAuthority">
     <id column="role_id" jdbcType="BIGINT" property="roleId"/>
     <result column="name" jdbcType="VARCHAR" property="name"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     <!--角色下的权限（一对多）-->
     <collection property="authorities" ofType="ewing.query.entity.Authority">
       <id column="authority_id" jdbcType="BIGINT" property="authorityId"/>
-      <result column="name" jdbcType="VARCHAR" property="name"/>
+      <result column="authority_name" jdbcType="VARCHAR" property="name"/>
       <result column="code" jdbcType="VARCHAR" property="code"/>
       <result column="type" jdbcType="VARCHAR" property="type"/>
       <result column="content" jdbcType="VARCHAR" property="content"/>
       <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+      <result column="authority_create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </collection>
   </resultMap>
 
@@ -37,8 +37,8 @@
     `authority`.`authority_id`,
     `authority`.`code`,
     `authority`.`content`,
-    `authority`.`create_time`,
-    `authority`.`name`,
+    `authority`.`create_time` as authority_create_time,
+    `authority`.`name` as authority_name,
     `authority`.`parent_id`,
     `authority`.`type`
     FROM

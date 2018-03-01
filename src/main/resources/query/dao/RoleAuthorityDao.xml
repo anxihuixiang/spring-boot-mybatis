@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.RoleAuthorityDao">
-  <insert id="insertRoleAuthorities" parameterType="List">
+  <insert id="insertRoleAuthorities" parameterType="list">
     INSERT INTO role_authority (role_id, authority_id, create_time)
     VALUES
-    <foreach collection="List" item="item" index="index" separator=",">
+    <foreach collection="list" item="item" index="index" separator=",">
       (#{item.roleId}, #{item.authorityId}, #{item.createTime})
     </foreach>
   </insert>

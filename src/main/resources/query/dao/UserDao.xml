@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.UserDao">
-  <select id="countRole" resultType="java.lang.Long"
+  <select id="countUser" resultType="java.lang.Long"
           parameterType="ewing.user.vo.FindUserParam">
     select count(*) from
     `user` `user` where 1
@@ -14,7 +14,7 @@
     </if>
   </select>
 
-  <resultMap id="UserWithRole" type="ewing.security.vo.RoleWithAuthority">
+  <resultMap id="UserWithRole" type="ewing.user.vo.UserWithRole">
     <id column="user_id" jdbcType="BIGINT" property="userId"/>
     <result column="username" jdbcType="VARCHAR" property="username"/>
     <result column="password" jdbcType="VARCHAR" property="password"/>
@@ -26,7 +26,7 @@
     <collection property="roles" ofType="ewing.query.entity.Role">
       <id column="role_id" jdbcType="BIGINT" property="roleId"/>
       <result column="name" jdbcType="VARCHAR" property="name"/>
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+      <result column="role_create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </collection>
   </resultMap>
 
@@ -40,7 +40,7 @@
     `user`.`password`,
     `user`.`user_id`,
     `user`.`username`,
-    `role`.`create_time`,
+    `role`.`create_time` as role_create_time,
     `role`.`name`,
     `role`.`role_id`
     FROM (

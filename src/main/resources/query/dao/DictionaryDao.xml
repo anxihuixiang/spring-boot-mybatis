@@ -5,16 +5,16 @@
   <select id="countSames" resultType="java.lang.Long">
     select count(*)
     from dictionary
-    where
-    <if test="name != null">
+    where 1
+    <if test="dictionaryId != null">
       and dictionary_id = #{dictionaryId}
     </if>
     <choose>
       <when test="parentId == null">
-        parent_id is null
+        and parent_id is null
       </when>
       <otherwise>
-        parent_id = #{parentId}
+        and parent_id = #{parentId}
       </otherwise>
     </choose>
     and (name = #{name} or value = #{value})
