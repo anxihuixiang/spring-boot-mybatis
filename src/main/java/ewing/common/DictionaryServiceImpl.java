@@ -59,8 +59,8 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
 
         // 相同位置下的字典名称或值不能重复
-        AppAsserts.yes(dictionaryDao.countSame(dictionary.getParentId(),
-                dictionary.getName(), dictionary.getValue()) < 1,
+        AppAsserts.yes(dictionaryDao.countSames(null,
+                dictionary.getParentId(), dictionary.getName(), dictionary.getValue()) < 1,
                 "相同位置下的字典名或值不能重复！");
 
         // 详情不允许为空串
@@ -85,16 +85,9 @@ public class DictionaryServiceImpl implements DictionaryService {
         AppAsserts.hasText(dictionary.getValue(), "字典值不能为空！");
 
         // 相同位置下的字典名称或值不能重复
-        /*BooleanExpression expression = qDictionary
-                .dictionaryId.ne(dictionary.getDictionaryId())
-                .and(dictionary.getParentId() == null ?
-                        qDictionary.parentId.isNull() :
-                        qDictionary.parentId.eq(dictionary.getParentId()));
-
-        AppAsserts.yes(dictionaryDao.countWhere(expression
-                        .and(qDictionary.name.eq(dictionary.getName())
-                                .or(qDictionary.value.eq(dictionary.getValue())))) < 1,
-                "相同位置下的字典名或值不能重复！");*/
+        AppAsserts.yes(dictionaryDao.countSames(dictionary.getDictionaryId(),
+                dictionary.getParentId(), dictionary.getName(), dictionary.getValue()) < 1,
+                "相同位置下的字典名或值不能重复！");
 
         // 不能修改父字典和根字典
         dictionary.setRootId(null);
@@ -109,10 +102,12 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public void deleteDictionary(Long dictionaryId) {
         AppAsserts.notNull(dictionaryId, "字典ID不能为空！");
-        /*AppAsserts.notNull(dictionaryDao.selectByKey(dictionaryId),
+        AppAsserts.notNull(dictionaryDao.selectByPrimaryKey(dictionaryId),
                 "该字典不存在或已删除！");
-        AppAsserts.yes(dictionaryDao.countWhere(qDictionary.parentId.eq(dictionaryId)) < 1,
-                "请先删除该字典的所有子项！");*/
+        DictionaryExample example = new DictionaryExample();
+        example.createCriteria().andParentIdEqualTo(dictionaryId);
+        AppAsserts.yes(dictionaryDao.countByExample(example) < 1,
+                "请先删除该字典的所有子项！");
 
         dictionaryDao.deleteByPrimaryKey(dictionaryId);
     }
@@ -120,7 +115,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public List<DictionaryNode> findDictionaryTrees(String[] rootValues) {
         AppAsserts.notNull(rootValues, "查询参数不能为空！");
-        List<DictionaryNode> dictionaries = null /*dictionaryDao.findRootSubDictionaries(rootValues)*/;
+        List<DictionaryNode> dictionaries = dictionaryDao.findRootSubDictionaries(rootValues);
         return TreeUtils.toTree(dictionaries);
     }
 

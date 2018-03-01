@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ewing.query.dao.DictionaryDao">
-  <select id="countSame" resultType="java.lang.Long">
+  <select id="countSames" resultType="java.lang.Long">
     select count(*)
     from dictionary
     where
+    <if test="name != null">
+      and dictionary_id = #{dictionaryId}
+    </if>
     <choose>
       <when test="parentId == null">
         parent_id is null
@@ -16,7 +20,8 @@
     and (name = #{name} or value = #{value})
   </select>
 
-  <select id="countDictionary" resultType="java.lang.Long" parameterType="ewing.common.vo.FindDictionaryParam">
+  <select id="countDictionary" resultType="java.lang.Long"
+          parameterType="ewing.common.vo.FindDictionaryParam">
     SELECT count(*)
     FROM (
     SELECT DISTINCT
@@ -41,7 +46,8 @@
     ) internal
   </select>
 
-  <select id="findWithSubDictionary" resultType="ewing.query.entity.Dictionary" parameterType="ewing.common.vo.FindDictionaryParam">
+  <select id="findWithSubDictionary" resultType="ewing.query.entity.Dictionary"
+          parameterType="ewing.common.vo.FindDictionaryParam">
     SELECT DISTINCT
     `all`.`create_time`,
     `all`.`detail`,
@@ -75,5 +81,22 @@
     LEFT JOIN `dictionary` `all`
     ON `dictionary`.`dictionary_id` = `all`.`dictionary_id`
     OR `dictionary`.`dictionary_id` = `all`.`root_id`
+  </select>
+
+  <select id="findRootSubDictionaries" resultType="ewing.common.vo.DictionaryNode">
+    SELECT DISTINCT
+    `all`.`root_id`,
+    `all`.`name`,
+    `all`.`dictionary_id`,
+    `all`.`value`,
+    `all`.`parent_id`
+    FROM
+    `dictionary` `dictionary`
+    LEFT JOIN `dictionary` `all` ON `dictionary`.`dictionary_id` = `all`.`root_id`
+    WHERE
+    `dictionary`.`value` in
+    <foreach collection="array" item="rootValue" index="index" open="(" close=")" separator=",">
+      #{rootValue}
+    </foreach>
   </select>
 </mapper>

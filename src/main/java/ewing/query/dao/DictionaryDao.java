@@ -1,5 +1,6 @@
 package ewing.query.dao;
 
+import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
 import ewing.query.entity.Dictionary;
 import ewing.query.mapper.DictionaryMapper;
@@ -13,6 +14,8 @@ public interface DictionaryDao extends DictionaryMapper {
 
     List<Dictionary> findWithSubDictionary(FindDictionaryParam findDictionaryParam);
 
-    long countSame(@Param("parentId") Long parentId, @Param("name") String name, @Param("value") String value);
+    long countSames(@Param("dictionaryId") Long dictionaryId, @Param("parentId") Long parentId,
+                    @Param("name") String name, @Param("value") String value);
 
+    List<DictionaryNode> findRootSubDictionaries(String[] rootValues);
 }
