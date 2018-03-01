@@ -31,7 +31,7 @@ spring:
 
 # MyBatis 配置
 mybatis:
-  mapper-locations: classpath:query/mapper/*.xml,classpath:query/dao/*.xml
+  mapper-locations: classpath:query/*/*.xml
   configuration:
     map-underscore-to-camel-case: true
     use-generated-keys: true
