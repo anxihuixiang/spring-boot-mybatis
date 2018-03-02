@@ -18,7 +18,7 @@ public class TreeUtils {
      * <p>
      * 例如把 List<Node> nodes 转成树：
      * TreeUtils.toTree(nodes, ArrayList::new,
-     * Node::getNodeId, Node::getParentId,
+     * Node::getNodeKey, Node::getParentKey,
      * Node::getChildren, Node::setChildren);
      */
     public static <E, C extends Collection<E>> C toTree(
@@ -27,8 +27,8 @@ public class TreeUtils {
             Function<E, Serializable> parentKeyGetter,
             Function<E, C> childrenGetter,
             BiConsumer<E, C> childrenSetter) {
-        if (nodes == null || nodes.isEmpty()) {
-            return nodes;
+        if (nodes == null) {
+            return null;
         }
         if (keyGetter == null || treeCreator == null || parentKeyGetter == null
                 || childrenGetter == null || childrenSetter == null) {
@@ -92,8 +92,8 @@ public class TreeUtils {
      */
     public static <E, C extends Collection<E>> C flat(
             C tree, Supplier<C> collectionCreator, Function<E, C> childrenGetter) {
-        if (tree == null || tree.isEmpty()) {
-            return tree;
+        if (tree == null) {
+            return null;
         }
         C nodes = collectionCreator.get();
         // 使用迭代器和栈记录所有遍历状态
@@ -120,8 +120,8 @@ public class TreeUtils {
     public static <E, C extends Collection<E>> C filterTree(
             C tree, Supplier<C> collectionCreator,
             Function<E, C> childrenGetter, Predicate<E> predicate) {
-        if (tree == null || tree.isEmpty()) {
-            return tree;
+        if (tree == null) {
+            return null;
         }
         C nodes = collectionCreator.get();
         // 使用迭代器和栈记录所有遍历状态
