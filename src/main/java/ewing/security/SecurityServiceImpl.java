@@ -133,7 +133,12 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public List<AuthorityNode> getAuthorityTree() {
-        return TreeUtils.toTree(authorityDao.getAuthorityNodes());
+        return TreeUtils.toTree(authorityDao.getAuthorityNodes(),
+                ArrayList::new,
+                AuthorityNode::getAuthorityId,
+                AuthorityNode::getParentId,
+                AuthorityNode::getChildren,
+                AuthorityNode::setChildren);
     }
 
     @Override

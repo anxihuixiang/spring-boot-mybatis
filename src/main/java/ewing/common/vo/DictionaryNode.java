@@ -1,11 +1,10 @@
 package ewing.common.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import ewing.application.common.TreeNode;
 
 import java.util.List;
 
-public class DictionaryNode implements TreeNode<DictionaryNode> {
+public class DictionaryNode {
 
     private Long dictionaryId;
 
@@ -27,13 +26,6 @@ public class DictionaryNode implements TreeNode<DictionaryNode> {
         this.dictionaryId = dictionaryId;
     }
 
-    @Override
-    @JsonIgnore
-    public Long getId() {
-        return dictionaryId;
-    }
-
-    @Override
     public Long getParentId() {
         return parentId;
     }
@@ -67,12 +59,10 @@ public class DictionaryNode implements TreeNode<DictionaryNode> {
         this.value = value;
     }
 
-    @Override
     public List<DictionaryNode> getChildren() {
         return children;
     }
 
-    @Override
     public void setChildren(List<DictionaryNode> children) {
         this.children = children;
     }

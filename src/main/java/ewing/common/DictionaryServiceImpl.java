@@ -5,9 +5,9 @@ import ewing.application.common.TreeUtils;
 import ewing.application.exception.AppRunException;
 import ewing.application.query.Paging;
 import ewing.application.query.QueryUtils;
+import ewing.common.dao.DictionaryDao;
 import ewing.common.vo.DictionaryNode;
 import ewing.common.vo.FindDictionaryParam;
-import ewing.common.dao.DictionaryDao;
 import ewing.query.entity.Dictionary;
 import ewing.query.entity.DictionaryExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -116,7 +117,12 @@ public class DictionaryServiceImpl implements DictionaryService {
     public List<DictionaryNode> findDictionaryTrees(String[] rootValues) {
         AppAsserts.notNull(rootValues, "查询参数不能为空！");
         List<DictionaryNode> dictionaries = dictionaryDao.findRootSubDictionaries(rootValues);
-        return TreeUtils.toTree(dictionaries);
+        return TreeUtils.toTree(dictionaries,
+                ArrayList::new,
+                DictionaryNode::getDictionaryId,
+                DictionaryNode::getParentId,
+                DictionaryNode::getChildren,
+                DictionaryNode::setChildren);
     }
 
 }

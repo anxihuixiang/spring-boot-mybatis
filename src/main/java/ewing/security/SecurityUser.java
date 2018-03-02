@@ -5,6 +5,7 @@ import ewing.application.common.TreeUtils;
 import ewing.security.vo.AuthorityNode;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,12 @@ public class SecurityUser implements UserDetails {
      */
     public void setAuthorities(List<AuthorityNode> authorities) {
         this.authorities = authorities;
-        this.authorityTree = TreeUtils.toTree(authorities);
+        this.authorityTree = TreeUtils.toTree(authorities,
+                ArrayList::new,
+                AuthorityNode::getAuthorityId,
+                AuthorityNode::getParentId,
+                AuthorityNode::getChildren,
+                AuthorityNode::setChildren);
     }
 
     public Long getUserId() {
