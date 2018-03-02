@@ -1,7 +1,7 @@
 # Spring Boot MyBatis
 ### Spring Boot 整合常用框架组成完整可用的快速开发模板。
 
-该项目改自[Spring Boot Service](https://github.com/EwingTsai/spring-boot-service)【推荐】并同步更新，点击查看预览。  
+该项目改自[Spring Boot Faster](https://github.com/EwingTsai/spring-boot-faster)【推荐】并同步更新，点击查看预览。  
   
 响应式管理界面改自zhengAdmin，基于Bootstrap、JQuery、Layui等，前后端是独立的，可分开部署和开发、自行更换前端框架。  
   
