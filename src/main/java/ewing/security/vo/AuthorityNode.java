@@ -1,7 +1,6 @@
 package ewing.security.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import ewing.application.common.TreeNode;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  *
  * @author Ewing
  */
-public class AuthorityNode implements GrantedAuthority, TreeNode<AuthorityNode> {
+public class AuthorityNode implements GrantedAuthority {
 
     private Long authorityId;
 
@@ -28,13 +27,6 @@ public class AuthorityNode implements GrantedAuthority, TreeNode<AuthorityNode> 
 
     private List<AuthorityNode> children;
 
-    @Override
-    @JsonIgnore
-    public Long getId() {
-        return authorityId;
-    }
-
-    @Override
     public Long getParentId() {
         return parentId;
     }
@@ -43,12 +35,10 @@ public class AuthorityNode implements GrantedAuthority, TreeNode<AuthorityNode> 
         this.parentId = parentId;
     }
 
-    @Override
     public List<AuthorityNode> getChildren() {
         return children;
     }
 
-    @Override
     public void setChildren(List<AuthorityNode> nodes) {
         this.children = nodes;
     }
